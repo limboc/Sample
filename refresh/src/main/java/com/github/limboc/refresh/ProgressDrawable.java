@@ -9,9 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.TypedValue;
 
-/**
- * Created by Aspsine on 2015/9/11.
- */
+
 public abstract class ProgressDrawable extends Drawable implements Animatable {
 
     /**

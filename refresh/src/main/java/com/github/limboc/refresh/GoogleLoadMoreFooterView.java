@@ -6,9 +6,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-/**
- * Created by Aspsine on 2015/11/5.
- */
+
 public class GoogleLoadMoreFooterView extends FrameLayout implements SwipeTrigger, SwipeLoadMoreTrigger {
     private ImageView ivLoadMore;
 

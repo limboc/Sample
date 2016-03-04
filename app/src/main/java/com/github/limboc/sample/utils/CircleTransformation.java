@@ -8,9 +8,7 @@ import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
 
-/**
- * Created by aspsine on 15/9/5.
- */
+
 public class CircleTransformation implements Transformation {
     private static final int DEFAULT_BORDER_WIDTH = 10;
     private static final int DEFAULT_BORDER_COLOR = Color.parseColor("#000000");

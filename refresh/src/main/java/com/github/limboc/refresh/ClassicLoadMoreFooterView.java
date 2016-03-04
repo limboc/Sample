@@ -6,9 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-/**
- * Created by Aspsine on 2015/9/2.
- */
+
 public class ClassicLoadMoreFooterView extends SwipeLoadMoreFooterLayout {
     private TextView tvLoadMore;
     private ImageView ivSuccess;

@@ -14,15 +14,13 @@ import android.widget.TextView;
 
 
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.bean.Character;
+import com.github.limboc.sample.data.bean.Character;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Aspsine on 2015/9/7.
- */
+
 public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
 
     private final List<Character> mHeroes;

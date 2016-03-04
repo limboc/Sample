@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Scroller;
 
-/**
- * Created by Aspsine on 2015/8/13.
- */
+
 public class SwipeToLoadLayout extends ViewGroup {
 
     private static final String TAG = SwipeToLoadLayout.class.getSimpleName();
@@ -814,11 +812,7 @@ public class SwipeToLoadLayout extends ViewGroup {
             switch (mStyle) {
                 case STYLE.CLASSIC:
                     // classic
-                    if (mTargetOffset > 0){
-                        targetTop = paddingTop + lp.topMargin;
-                    }else{
-                        targetTop = paddingTop + lp.topMargin + mTargetOffset;
-                    }
+                    targetTop = paddingTop + lp.topMargin;
                     break;
                 case STYLE.ABOVE:
                     // above

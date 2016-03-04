@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Aspsine on 2015/9/7.
- */
+
 public abstract class BaseLoopPagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener, View.OnTouchListener, Runnable {
 
     private static final int DEFAULT_DELAY_MILLIS = 5000;

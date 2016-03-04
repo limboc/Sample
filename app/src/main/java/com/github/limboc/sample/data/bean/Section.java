@@ -1,10 +1,9 @@
-package com.github.limboc.sample.bean;
+package com.github.limboc.sample.data.bean;
 
+import java.lang.*;
 import java.util.List;
 
-/**
- * Created by aspsine on 15/9/4.
- */
+
 public class Section {
     private String name;
     private List<Character> characters;

@@ -1,8 +1,6 @@
 package com.github.limboc.sample.utils;
 
-/**
- * Created by Aspsine on 2015/9/6.
- */
+
 public class Constants {
 
     public static final class API {

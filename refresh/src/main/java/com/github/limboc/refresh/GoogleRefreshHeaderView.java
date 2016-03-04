@@ -7,9 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 
-/**
- * Created by aspsine on 15/9/10.
- */
+
 public class GoogleRefreshHeaderView extends FrameLayout implements SwipeTrigger, SwipeRefreshTrigger {
     private ImageView ivRefresh;
 

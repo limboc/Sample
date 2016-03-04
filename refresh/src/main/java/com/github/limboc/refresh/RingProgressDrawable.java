@@ -7,9 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-/**
- * Created by aspsine on 15/9/11.
- */
+
 public class RingProgressDrawable extends ProgressDrawable {
     /**
      * in dp

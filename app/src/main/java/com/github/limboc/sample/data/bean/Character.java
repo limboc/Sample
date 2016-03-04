@@ -1,8 +1,6 @@
-package com.github.limboc.sample.bean;
+package com.github.limboc.sample.data.bean;
 
-/**
- * Created by Aspsine on 2015/9/2.
- */
+
 public class Character {
     private String name;
     private String avatar;

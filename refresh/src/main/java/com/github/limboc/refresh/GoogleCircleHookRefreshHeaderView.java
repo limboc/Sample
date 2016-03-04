@@ -6,9 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-/**
- * Created by aspsine on 15/11/7.
- */
+
 public class GoogleCircleHookRefreshHeaderView extends FrameLayout implements SwipeTrigger, SwipeRefreshTrigger {
     private GoogleCircleProgressView progressView;
 

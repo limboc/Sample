@@ -1,8 +1,6 @@
 package com.github.limboc.refresh;
 
-/**
- * Created by Aspsine on 2015/8/17.
- */
+
 public interface SwipeTrigger {
     void onPrepare();
 
