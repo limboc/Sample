@@ -12,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.data.bean.Character;
+import com.github.limboc.sample.data.bean.Meizhi;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
 
-    private final List<Character> mHeroes;
+    private final List<Meizhi> data;
 
     private final ViewGroup mIndicators;
 
@@ -32,12 +31,12 @@ public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
     public LoopViewPagerAdapter(ViewPager viewPager, ViewGroup indicators) {
         super(viewPager);
         mIndicators = indicators;
-        mHeroes = new ArrayList<>();
+        data = new ArrayList<>();
     }
 
-    public void setList(List<Character> heroes) {
-        mHeroes.clear();
-        mHeroes.addAll(heroes);
+    public void setList(List<Meizhi> data) {
+        this.data.clear();
+        this.data.addAll(data);
         notifyDataSetChanged();
     }
 
@@ -46,7 +45,7 @@ public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
      * this shit have no animation at all.
      */
     private void initIndicators() {
-        if (mIndicators.getChildCount() != mHeroes.size() && mHeroes.size() > 1) {
+        if (mIndicators.getChildCount() != data.size() && data.size() > 1) {
             mIndicators.removeAllViews();
             Resources res = mIndicators.getResources();
             int size = res.getDimensionPixelOffset(R.dimen.indicator_size);
@@ -73,12 +72,12 @@ public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
 
     @Override
     public int getPagerCount() {
-        return mHeroes.size();
+        return data.size();
     }
 
     @Override
-    public Character getItem(int position) {
-        return mHeroes.get(position);
+    public Meizhi getItem(int position) {
+        return data.get(position);
     }
 
     @Override
@@ -93,9 +92,9 @@ public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Character character = mHeroes.get(position);
-        holder.tvName.setText(character.getName().replace(" ", System.getProperty("line.separator")));
-        Picasso.with(parent.getContext()).load(character.getAvatar()).into(holder.ivBanner);
+        Meizhi m = data.get(position);
+        //holder.tvName.setText(character.getName().replace(" ", System.getProperty("line.separator")));
+        Picasso.with(parent.getContext()).load(m.getUrl()).into(holder.ivBanner);
         return convertView;
     }
 

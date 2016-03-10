@@ -1,10 +1,8 @@
 package com.github.limboc.sample.ui.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,29 +14,27 @@ import com.github.limboc.sample.DrakeetFactory;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.MeizhiData;
 import com.github.limboc.sample.data.bean.DemoModel;
+import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.ui.adapter.CommonRcvAdapter;
 import com.github.limboc.sample.ui.item.AdapterItem;
-import com.github.limboc.sample.ui.item.ButtonItem;
-import com.github.limboc.sample.ui.item.TextItem;
+import com.github.limboc.sample.ui.item.ImageItem;
 import com.github.limboc.sample.ui.item.ViewpagerItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements OnRefreshListener, OnLoadMoreListener{
+public class MainActivity extends BaseActivity implements OnRefreshListener, OnLoadMoreListener{
 
     private SwipeToLoadLayout swipeToLoadLayout;
     private RecyclerView recyclerView;
-    private List<DemoModel> data;
-    private int page=0, limit = 10;
+    private MeizhiData data;
+    private int page=1, limit = 10;
     private ViewpagerItem viewpagerItem;
+    private List<DemoModel> objectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         recyclerView.setLayoutManager(layoutManager);
         swipeToLoadLayout.setOnRefreshListener(this);
         swipeToLoadLayout.setOnLoadMoreListener(this);
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE ){
@@ -60,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
                     }
                 }
             }
-        });
+        });*/
 
-        viewpagerItem = new ViewpagerItem();
+
         swipeToLoadLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
     @Override
     public void onPause() {
         super.onPause();
-        // TODO: 2016/3/2 stop viewpager 
         if (swipeToLoadLayout.isRefreshing()) {
             swipeToLoadLayout.setRefreshing(false);
         }
@@ -98,96 +93,97 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
 
     @Override
     public void onRefresh() {
-        swipeToLoadLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                page=0;
-                data = new ArrayList<>();
-                loadData(getBaseContext());
-                swipeToLoadLayout.setRefreshing(false);
-                recyclerView.setAdapter(getAdapter(data));
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
+        swipeToLoadLayout.postDelayed(()-> {
+                page=1;
+                data = new MeizhiData();
+                objectList = new ArrayList<>();
+                loadData();
         }, 3000);
 
     }
 
     @Override
     public void onLoadMore() {
-        swipeToLoadLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        swipeToLoadLayout.postDelayed(()-> {
                 page++;
-                loadData(getBaseContext());
-                swipeToLoadLayout.setLoadingMore(false);
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
+                loadData();
         }, 3000);
 
     }
 
 
-    private CommonRcvAdapter<DemoModel> getAdapter(List<DemoModel> data) {
-        return new CommonRcvAdapter<DemoModel>(data) {
-
-            @Override
-            public Object getItemType(DemoModel demoModel) {
-                return demoModel.type;
-            }
-
-            @NonNull
-            @Override
-            public AdapterItem createItem(Object type) {
-                switch (((String) type)) {
-                    case "viewpager":
-                        return viewpagerItem;
-                    case "text":
-                        return new TextItem();
-                    case "button":
-                        return new ButtonItem();
-                    default:
-                        throw new IllegalArgumentException("不合法的type");
-                }
-            }
-        };
-    }
-
-    public void loadData(Context context) {
-        List<String> originList = Arrays.asList(context.getResources().getStringArray(R.array.country_names));
-        if(data != null && data.size() == 0){
-            DemoModel model0 = new DemoModel();
-            model0.type = "viewpager";
-            model0.content = "";
-            data.add(model0);
-        }
-        for (int i = page*limit; i < limit + page*limit; i++) {
-            int type = (int) (Math.random() * 2);
-            //Log.d(TAG, "type = " + type);
-            DemoModel model = new DemoModel();
-            switch (type) {
-                case 0:
-                    model.type = "text";
-                    model.content = originList.get(i);
-                    break;
-                case 1:
-                    model.type = "button";
-                    model.content = "b:" + originList.get(i);
-                    break;
-                default:
-            }
-            data.add(model);
-        }
-
-        loadData();
-    }
-
     private void loadData(){
-        DrakeetFactory.getGankIOSingleton()
+        Subscription s = DrakeetFactory.getGankIOSingleton()
                 .getMeizhiData(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meizhiData -> Log.d("main", meizhiData.toString()),
-                        throwable -> throwable.printStackTrace());
+                .finallyDo(()-> {
+                    if(page == 1){
+                        swipeToLoadLayout.setRefreshing(false);
+                    }else{
+                        swipeToLoadLayout.setLoadingMore(false);
+                    }
+                })
+                .subscribe(meizhiData -> {
+                    data = meizhiData;
+                    setAdapter();
+                },throwable -> throwable.printStackTrace());
+        addSubscription(s);
+    }
+
+    private void setAdapter(){
+        if(page == 1){
+            DemoModel model = new DemoModel();
+            model.setType("viewpager");
+            model.setContent(data);
+            objectList.add(model);
+
+            for(Meizhi item:data.getResults()){
+                DemoModel m = new DemoModel();
+                m.setType("image");
+                m.setContent(item);
+                objectList.add(m);
+            }
+
+            recyclerView.setAdapter(new CommonRcvAdapter<DemoModel>(objectList) {
+
+                @Override
+                public Object getItemType(DemoModel demoModel) {
+                    return demoModel.getType();
+                }
+
+                @NonNull
+                @Override
+                public AdapterItem createItem(Object type) {
+                    switch ((String)type){
+                        case "viewpager":
+                            viewpagerItem = new ViewpagerItem();
+                            return viewpagerItem;
+                        case "image":
+                            return new ImageItem();
+                        default:
+                            throw new IllegalArgumentException("不合法的type");
+                    }
+
+                }
+
+                @NonNull
+                @Override
+                public Object getConvertedData(DemoModel data, Object type) {
+                    switch ((String)type){
+                        case "viewpager":
+                            return (MeizhiData)data.getContent();
+                        case "image":
+                            return (Meizhi)data.getContent();
+                        default:
+                            throw new IllegalArgumentException("不合法的type");
+                    }
+                }
+            });
+
+        }
+        recyclerView.getAdapter().notifyDataSetChanged();
+
     }
 
 

@@ -32,7 +32,7 @@ public class TextItem implements AdapterItem<DemoModel> {
 
     @Override
     public void handleData(DemoModel model, int position) {
-        textView.setText(model.content);
+        textView.setText((String)model.getContent());
     }
 
 }
