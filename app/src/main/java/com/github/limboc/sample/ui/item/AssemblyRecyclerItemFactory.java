@@ -8,6 +8,7 @@ import com.github.limboc.sample.ui.adapter.AssemblyRecyclerAdapter;
 public abstract class AssemblyRecyclerItemFactory<ITEM extends AssemblyRecyclerItem>{
     protected int itemType;
     protected AssemblyRecyclerAdapter adapter;
+    protected OnItemClickListener onItemClickListener;
 
     public int getItemType() {
         return itemType;
@@ -28,4 +29,8 @@ public abstract class AssemblyRecyclerItemFactory<ITEM extends AssemblyRecyclerI
     public abstract boolean isTarget(Object itemObject);
 
     public abstract ITEM createAssemblyItem(ViewGroup parent);
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
 }

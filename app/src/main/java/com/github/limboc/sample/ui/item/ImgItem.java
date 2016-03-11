@@ -42,19 +42,17 @@ public class ImgItem extends AssemblyRecyclerItemFactory<ImgItem.ImgRecyclerItem
         @Override
         protected void onFindViews(View convertView) {
             iv_avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
-
         }
 
         @Override
         protected void onConfigViews(final Context context) {
-
 
         }
 
         @Override
         protected void onSetData(int position, Meizhi item) {
 
-            Picasso.with(context).load(item.getUrl()).resize(500,500).into(iv_avatar);
+            Picasso.with(context).load(item.getUrl()).resize(500,400).centerCrop().into(iv_avatar);
         }
 
     }

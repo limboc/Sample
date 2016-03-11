@@ -16,6 +16,11 @@ public abstract class AssemblyRecyclerItem<BEAN, ITEM_FACTORY extends AssemblyRe
         this.itemFactory = itemFactory;
         onFindViews(convertView);
         onConfigViews(convertView.getContext());
+        if(null != itemFactory.onItemClickListener){
+            convertView.setOnClickListener((listener)->{
+                itemFactory.onItemClickListener.onClick(getPosition());
+            });
+        }
 
     }
 
@@ -41,4 +46,6 @@ public abstract class AssemblyRecyclerItem<BEAN, ITEM_FACTORY extends AssemblyRe
     public BEAN getData() {
         return data;
     }
+
+
 }

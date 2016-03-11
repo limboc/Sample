@@ -94,7 +94,7 @@ public class LoopViewPagerAdapter extends BaseLoopPagerAdapter {
         }
         Meizhi m = data.get(position);
         //holder.tvName.setText(character.getName().replace(" ", System.getProperty("line.separator")));
-        Picasso.with(parent.getContext()).load(m.getUrl()).into(holder.ivBanner);
+        Picasso.with(parent.getContext()).load(m.getUrl()).resize(500,400).centerCrop().into(holder.ivBanner);
         return convertView;
     }
 

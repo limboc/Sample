@@ -9,8 +9,9 @@ import rx.Observable;
 
 public interface GankApi {
 
-    @GET("/api/data/福利/" + DrakeetFactory.meizhiSize + "/{page}")
+    @GET("/api/data/福利/{limit}/{page}")
     Observable<MeizhiData> getMeizhiData(
+            @Path("limit") int limit,
             @Path("page") int page);
 
 
