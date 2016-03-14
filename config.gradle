@@ -10,6 +10,7 @@ ext {
 
     dependencies = ["appcompat-v7"      : "com.android.support:appcompat-v7:23.2.0",
                     "recyclerview-v7"   : "com.android.support:recyclerview-v7:23.2.0",
+                    "design"            : "com.android.support:design:23.2.0",
                     "picasso"           : "com.squareup.picasso:picasso:2.5.2",
                     "retrofit"          : "com.squareup.retrofit2:retrofit:2.0.0-beta4",
                     "retrofit-adapters" : "com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4",
