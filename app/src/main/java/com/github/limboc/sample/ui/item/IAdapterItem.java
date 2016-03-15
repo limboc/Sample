@@ -11,7 +11,7 @@ import android.view.View;
  * 在{@link #handleData(Object, int)}中处理每一行的数据<p>
  *
  */
-public interface AdapterItem<T> {
+public interface IAdapterItem<T> {
 
     /**
      * @return item布局文件的layoutId

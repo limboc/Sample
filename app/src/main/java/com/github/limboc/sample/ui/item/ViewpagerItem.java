@@ -5,16 +5,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.MeizhiData;
-import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.ui.adapter.LoopViewPagerAdapter;
-import com.squareup.picasso.Picasso;
 
 
-public class ViewPagerItem extends AssemblyRecyclerItemFactory<ViewPagerItem.ViewPagerRecyclerItem> {
+public class ViewPagerItem extends BaseRecyclerItemFactory<ViewPagerItem.ViewPagerRecyclerItem> {
 
     Context context;
     LoopViewPagerAdapter mPagerAdapter;
@@ -29,13 +26,13 @@ public class ViewPagerItem extends AssemblyRecyclerItemFactory<ViewPagerItem.Vie
     }
 
     @Override
-    public ViewPagerRecyclerItem createAssemblyItem(ViewGroup parent) {
+    public ViewPagerRecyclerItem createBaseItem(ViewGroup parent) {
         return new ViewPagerRecyclerItem(parent, this);
     }
 
 
 
-    public class ViewPagerRecyclerItem extends AssemblyRecyclerItem<MeizhiData, ViewPagerItem> {
+    public class ViewPagerRecyclerItem extends BaseRecyclerItem<MeizhiData, ViewPagerItem> {
 
         private ViewPager viewPager;
         ViewGroup indicators;

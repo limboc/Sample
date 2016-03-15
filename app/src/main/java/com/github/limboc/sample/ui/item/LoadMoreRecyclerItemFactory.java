@@ -15,7 +15,7 @@ public class LoadMoreRecyclerItemFactory extends AbstractLoadMoreRecyclerItemFac
     }
 
     @Override
-    public AbstractLoadMoreRecyclerItem createAssemblyItem(ViewGroup parent) {
+    public AbstractLoadMoreRecyclerItem createBaseItem(ViewGroup parent) {
         return new LoadMoreRecyclerItem(parent, this);
     }
 

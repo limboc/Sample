@@ -3,12 +3,12 @@ package com.github.limboc.sample.ui.adapter;
 import android.content.Context;
 import android.view.View;
 
-import com.github.limboc.sample.ui.item.AssemblyRecyclerItem;
-import com.github.limboc.sample.ui.item.AssemblyRecyclerItemFactory;
+import com.github.limboc.sample.ui.item.BaseRecyclerItem;
+import com.github.limboc.sample.ui.item.BaseRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
 
 
-public abstract class AbstractLoadMoreRecyclerItemFactory extends AssemblyRecyclerItemFactory<AbstractLoadMoreRecyclerItemFactory.AbstractLoadMoreRecyclerItem> {
+public abstract class AbstractLoadMoreRecyclerItemFactory extends BaseRecyclerItemFactory<AbstractLoadMoreRecyclerItemFactory.AbstractLoadMoreRecyclerItem> {
     boolean loadMoreRunning;
     boolean end;
     private OnRecyclerLoadMoreListener eventListener;
@@ -22,7 +22,7 @@ public abstract class AbstractLoadMoreRecyclerItemFactory extends AssemblyRecycl
         return false;
     }
 
-    public abstract static class AbstractLoadMoreRecyclerItem extends AssemblyRecyclerItem<String, AbstractLoadMoreRecyclerItemFactory> {
+    public abstract static class AbstractLoadMoreRecyclerItem extends BaseRecyclerItem<String, AbstractLoadMoreRecyclerItemFactory> {
         protected AbstractLoadMoreRecyclerItem(View convertView, AbstractLoadMoreRecyclerItemFactory baseFactory) {
             super(convertView, baseFactory);
         }

@@ -11,7 +11,7 @@ import com.github.limboc.sample.data.bean.Meizhi;
 import com.squareup.picasso.Picasso;
 
 
-public class ImgItem extends AssemblyRecyclerItemFactory<ImgItem.ImgRecyclerItem> {
+public class ImgItem extends BaseRecyclerItemFactory<ImgItem.ImgRecyclerItem> {
 
     Context context;
 
@@ -25,13 +25,13 @@ public class ImgItem extends AssemblyRecyclerItemFactory<ImgItem.ImgRecyclerItem
     }
 
     @Override
-    public ImgRecyclerItem createAssemblyItem(ViewGroup parent) {
+    public ImgRecyclerItem createBaseItem(ViewGroup parent) {
         return new ImgRecyclerItem(parent, this);
     }
 
 
 
-    public class ImgRecyclerItem extends AssemblyRecyclerItem<Meizhi, ImgItem> {
+    public class ImgRecyclerItem extends BaseRecyclerItem<Meizhi, ImgItem> {
 
         private ImageView iv_avatar;
 
