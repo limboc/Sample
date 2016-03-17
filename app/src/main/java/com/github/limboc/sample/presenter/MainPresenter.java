@@ -48,9 +48,9 @@ public class MainPresenter extends BasePresenter<IMainView>{
                         objectList.add(item);
                     }
                     getView().onLoadDataSuccess(objectList);
-                },throwable -> {
-                    throwable.printStackTrace();
-                    if((Exception)throwable instanceof SocketException){
+                },onError -> {
+                    onError.printStackTrace();
+                    if((Exception)onError instanceof SocketException){
                         getView().showMessage("连不到服务器");
                     }
 
