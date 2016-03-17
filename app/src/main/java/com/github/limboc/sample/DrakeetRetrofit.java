@@ -15,14 +15,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DrakeetRetrofit {
 
     final GankApi gankService;
-
-    // @formatter:off
+    final long TIME_OUT = 10;
     final static Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .serializeNulls()
             .create();
-    // @formatter:on
-
 
     DrakeetRetrofit() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -30,7 +27,7 @@ public class DrakeetRetrofit {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .retryOnConnectionFailure(true)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
                 //.addNetworkInterceptor(mTokenInterceptor)
                 .build();
 

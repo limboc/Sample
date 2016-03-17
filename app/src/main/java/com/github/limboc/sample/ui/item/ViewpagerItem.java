@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.data.MeizhiData;
+import com.github.limboc.sample.data.SimpleResult;
+import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.ui.adapter.LoopViewPagerAdapter;
+
+import java.util.List;
 
 
 public class ViewPagerItem extends BaseRecyclerItemFactory<ViewPagerItem.ViewPagerRecyclerItem> {
@@ -22,7 +25,7 @@ public class ViewPagerItem extends BaseRecyclerItemFactory<ViewPagerItem.ViewPag
 
     @Override
     public boolean isTarget(Object itemObject) {
-        return itemObject instanceof MeizhiData;
+        return itemObject instanceof SimpleResult;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ViewPagerItem extends BaseRecyclerItemFactory<ViewPagerItem.ViewPag
 
 
 
-    public class ViewPagerRecyclerItem extends BaseRecyclerItem<MeizhiData, ViewPagerItem> {
+    public class ViewPagerRecyclerItem extends BaseRecyclerItem<SimpleResult<List<Meizhi>>, ViewPagerItem> {
 
         private ViewPager viewPager;
         ViewGroup indicators;
@@ -54,7 +57,7 @@ public class ViewPagerItem extends BaseRecyclerItemFactory<ViewPagerItem.ViewPag
         }
 
         @Override
-        protected void onSetData(int position, MeizhiData item) {
+        protected void onSetData(int position, SimpleResult<List<Meizhi>> item) {
             if(viewPager.getAdapter() == null){
                 mPagerAdapter = new LoopViewPagerAdapter(viewPager, indicators);
                 viewPager.setAdapter(mPagerAdapter);

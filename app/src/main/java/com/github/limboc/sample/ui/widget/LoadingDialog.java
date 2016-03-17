@@ -1,8 +1,9 @@
-package com.github.limboc.sample.ui.utils;
+package com.github.limboc.sample.ui.widget;
 
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.ui.utils.DensityUtils;
+import com.github.limboc.sample.utils.L;
 
 
 public class LoadingDialog extends Dialog {
@@ -40,6 +43,5 @@ public class LoadingDialog extends Dialog {
         setCanceledOnTouchOutside(isCancelable);
         setCancelable(isCancelable);
     }
-
 
 }

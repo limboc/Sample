@@ -1,4 +1,4 @@
-package com.github.limboc.sample.utils;
+package com.github.limboc.sample.ui.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

@@ -1,15 +1,16 @@
 package com.github.limboc.sample.presenter;
 
-import android.system.ErrnoException;
-
 import com.github.limboc.sample.DrakeetFactory;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.iview.IMainView;
 
+import java.net.ConnectException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -32,6 +33,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
         }
         Subscription s = DrakeetFactory.getGankIOSingleton()
                 .getMeizhiData(limit, page)
+                .map(new HttpResultFunc<>())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .finallyDo(()-> {
@@ -41,21 +43,22 @@ public class MainPresenter extends BasePresenter<IMainView>{
                     if(meizhiData == null){
                         return;
                     }
-                    if(page == 1){
-                        objectList.add(meizhiData);
-                    }
-                    for(Meizhi item:meizhiData.getResults()){
+                    for(Meizhi item:meizhiData){
                         objectList.add(item);
                     }
                     getView().onLoadDataSuccess(objectList);
-                },onError -> {
-                    onError.printStackTrace();
-                    if((Exception)onError instanceof SocketException){
-                        getView().showMessage("连不到服务器");
-                    }
-
+                },throwable -> {
+                    handleError(throwable);
                 });
         mCompositeSubscription.add(s);
+    }
+
+    public void getMe(Subscriber<List<Meizhi>> subscriber){
+        Observable observable = DrakeetFactory.getGankIOSingleton()
+                .getMeizhiData(limit, page)
+                .map(new HttpResultFunc<>());
+
+        toSubscribe(observable, subscriber);
     }
 
     public int getPage() {

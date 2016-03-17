@@ -8,11 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.ui.utils.LoadingDialog;
+import com.github.limboc.sample.ui.widget.LoadingDialog;
 
 import butterknife.ButterKnife;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 
 public abstract class BaseActivity extends AppCompatActivity {

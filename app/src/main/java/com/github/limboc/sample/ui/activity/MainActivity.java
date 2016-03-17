@@ -1,6 +1,5 @@
 package com.github.limboc.sample.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +19,7 @@ import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
 import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
+import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.T;
 
@@ -126,8 +126,9 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                 });
                 return true;
             case R.id.action_progress_dialog:
-                //startActivity(new Intent(context, SetPatternActivity.class));
-                showLoadingDialog(true);
+                presenter.getMe(new ProgressSubscriber(o -> {
+                    L.d("main", "load completed");
+                }, context));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -140,18 +141,18 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);
             viewPagerItem = new ViewPagerItem(getBaseContext());
-            adapter.addItemFactory(viewPagerItem);
+            //adapter.addItemFactory(viewPagerItem);
             ImgItem imgItem = new ImgItem(getBaseContext());
             imgItem.setOnItemClickListener(position -> {
                 L.d("Main", position + "");
             });
             adapter.addItemFactory(imgItem);
-            if(presenter.getLimit() == objectList.size() - 1){
+            if(presenter.getLimit() == objectList.size()){
                 adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
             }
             recyclerView.setAdapter(adapter);
         }else{
-            if(presenter.getPage() * presenter.getLimit() > objectList.size()-1){
+            if(presenter.getPage() * presenter.getLimit() > objectList.size()){
                 adapter.loadMoreEnd();
             }
             adapter.loadMoreFinished();
