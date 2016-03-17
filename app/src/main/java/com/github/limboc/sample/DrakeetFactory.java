@@ -5,7 +5,6 @@ public class DrakeetFactory {
 
     protected static final Object monitor = new Object();
     static GankApi sGankIOSingleton = null;
-    public static final int meizhiSize = 10;
 
 
     public static GankApi getGankIOSingleton() {

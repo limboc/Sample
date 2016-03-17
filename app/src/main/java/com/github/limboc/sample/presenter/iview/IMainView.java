@@ -8,4 +8,5 @@ import java.util.List;
 public interface IMainView extends IBaseView{
 
     void onLoadDataSuccess(List<Object> objectList);
+
 }

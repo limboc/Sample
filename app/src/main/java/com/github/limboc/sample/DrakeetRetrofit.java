@@ -30,7 +30,7 @@ public class DrakeetRetrofit {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .retryOnConnectionFailure(true)
-                .connectTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
                 //.addNetworkInterceptor(mTokenInterceptor)
                 .build();
 

@@ -1,9 +1,12 @@
 package com.github.limboc.sample.presenter;
 
+import android.system.ErrnoException;
+
 import com.github.limboc.sample.DrakeetFactory;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.iview.IMainView;
 
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,10 @@ public class MainPresenter extends BasePresenter<IMainView>{
     private int page=1, limit = 10;
     private List<Object> objectList;
 
+    public MainPresenter() {
+
+    }
+
     public void loadData(){
         if(page == 1){
             objectList = new ArrayList<>();
@@ -31,14 +38,23 @@ public class MainPresenter extends BasePresenter<IMainView>{
 
                 })
                 .subscribe(meizhiData -> {
+                    if(meizhiData == null){
+                        return;
+                    }
                     if(page == 1){
                         objectList.add(meizhiData);
                     }
                     for(Meizhi item:meizhiData.getResults()){
                         objectList.add(item);
                     }
-                    getMvpView().onLoadDataSuccess(objectList);
-                },throwable -> throwable.printStackTrace());
+                    getView().onLoadDataSuccess(objectList);
+                },throwable -> {
+                    throwable.printStackTrace();
+                    if((Exception)throwable instanceof SocketException){
+                        getView().showMessage("连不到服务器");
+                    }
+
+                });
         mCompositeSubscription.add(s);
     }
 
@@ -49,4 +65,9 @@ public class MainPresenter extends BasePresenter<IMainView>{
     public void setPage(int page) {
         this.page = page;
     }
+
+    public int getLimit() {
+        return limit;
+    }
+
 }

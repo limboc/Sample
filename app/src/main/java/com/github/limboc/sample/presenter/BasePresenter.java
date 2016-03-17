@@ -9,32 +9,32 @@ import rx.subscriptions.CompositeSubscription;
 
 public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
 
-    private T mMvpView;
+    private T mView;
     public CompositeSubscription mCompositeSubscription;
     public GankApi mDataManager;
 
 
     @Override
     public void attachView(T mvpView) {
-        this.mMvpView = mvpView;
+        this.mView = mvpView;
         this.mCompositeSubscription = new CompositeSubscription();
         this.mDataManager = DrakeetFactory.getGankIOSingleton();
     }
 
     @Override
     public void detachView() {
-        this.mMvpView = null;
+        this.mView = null;
         this.mCompositeSubscription.unsubscribe();
         this.mCompositeSubscription = null;
         this.mDataManager = null;
     }
 
     public boolean isViewAttached() {
-        return mMvpView != null;
+        return mView != null;
     }
 
-    public T getMvpView() {
-        return mMvpView;
+    public T getView() {
+        return mView;
     }
 
     public void checkViewAttached() {

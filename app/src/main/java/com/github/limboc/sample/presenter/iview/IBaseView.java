@@ -5,5 +5,6 @@ package com.github.limboc.sample.presenter.iview;
  */
 public interface IBaseView {
 
-    void onFailure(Throwable e);
+    void showMessage(String message);
+
 }

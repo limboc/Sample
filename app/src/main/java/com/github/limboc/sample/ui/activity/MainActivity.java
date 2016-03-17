@@ -6,15 +6,12 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
-import com.github.limboc.sample.DrakeetFactory;
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
@@ -23,19 +20,22 @@ import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
 import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
+import com.github.limboc.sample.utils.L;
+import com.github.limboc.sample.utils.T;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
-    private SwipeToLoadLayout swipeToLoadLayout;
-    private RecyclerView recyclerView;
-    private int page=1, limit = 10;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.swipeToLoadLayout)
+    SwipeToLoadLayout swipeToLoadLayout;
+    @Bind(R.id.swipe_target)
+    RecyclerView recyclerView;
     private List<Object> objectList;
     private BaseRecyclerAdapter adapter;
     private ViewPagerItem viewPagerItem;
@@ -43,26 +43,25 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     private MainPresenter presenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        swipeToLoadLayout = (SwipeToLoadLayout) findViewById(R.id.swipeToLoadLayout);
-        recyclerView = (RecyclerView) findViewById(R.id.swipe_target);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    protected void initView(Bundle saveInstanceState) {
+        setSupportActionBar(toolbar);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setRecycleChildrenOnDetach(true);
         recyclerView.setLayoutManager(layoutManager);
         swipeToLoadLayout.setOnRefreshListener(this);
-
-        swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
-
         presenter = new MainPresenter();
         presenter.attachView(this);
-
     }
 
+    @Override
+    protected void initData() {
+        swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
+    }
 
     @Override
     public void onResume() {
@@ -86,9 +85,7 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
 
     @Override
     public void onRefresh() {
-        page=1;
         objectList = new ArrayList<>();
-        //loadData();
         presenter.setPage(1);
         presenter.loadData();
 
@@ -96,54 +93,10 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
 
     @Override
     public void onLoadMore(BaseRecyclerAdapter adapter) {
-        page++;
         presenter.setPage(presenter.getPage()+1);
         presenter.loadData();
-        //loadData();
     }
 
-    private void loadData(){
-        Subscription s = DrakeetFactory.getGankIOSingleton()
-                .getMeizhiData(limit, page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .finallyDo(()-> {
-                    if(page == 1){
-                        swipeToLoadLayout.setRefreshing(false);
-                    }
-                })
-                .subscribe(meizhiData -> {
-                    if(limit < meizhiData.getResults().size()){
-                        adapter.loadMoreEnd();
-                    }
-                    if(page == 1){
-                        objectList.add(meizhiData);
-                    }
-                    for(Meizhi item:meizhiData.getResults()){
-                        objectList.add(item);
-                    }
-                    setAdapter();
-                },throwable -> throwable.printStackTrace());
-        addSubscription(s);
-    }
-
-    private void setAdapter() {
-        if(page == 1){
-            adapter = new BaseRecyclerAdapter(objectList);
-            viewPagerItem = new ViewPagerItem(getBaseContext());
-            adapter.addItemFactory(viewPagerItem);
-            ImgItem imgItem = new ImgItem(getBaseContext());
-            imgItem.setOnItemClickListener(position -> {
-                Log.d("Main", position + "");
-            });
-            adapter.addItemFactory(imgItem);
-            adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
-            recyclerView.setAdapter(adapter);
-        }else{
-            adapter.loadMoreFinished();
-            adapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,7 +126,8 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                 });
                 return true;
             case R.id.action_progress_dialog:
-                startActivity(new Intent(context, SetPatternActivity.class));
+                //startActivity(new Intent(context, SetPatternActivity.class));
+                showLoadingDialog(true);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -189,21 +143,34 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
             adapter.addItemFactory(viewPagerItem);
             ImgItem imgItem = new ImgItem(getBaseContext());
             imgItem.setOnItemClickListener(position -> {
-                Log.d("Main", position + "");
+                L.d("Main", position + "");
             });
             adapter.addItemFactory(imgItem);
-            adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
+            if(presenter.getLimit() == objectList.size() - 1){
+                adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
+            }
             recyclerView.setAdapter(adapter);
         }else{
+            if(presenter.getPage() * presenter.getLimit() > objectList.size()-1){
+                adapter.loadMoreEnd();
+            }
             adapter.loadMoreFinished();
             adapter.notifyDataSetChanged();
         }
-        Log.d("TTTTT", "ddddd");
     }
 
-    @Override
-    public void onFailure(Throwable e) {
 
+    @Override
+    public void showMessage(String message) {
+        runOnUiThread(() -> {
+            if(presenter.getPage() == 1){
+                swipeToLoadLayout.setRefreshing(false);
+
+            }else if(adapter != null){
+                adapter.loadMoreFailed();
+            }
+            T.showShort(message);
+        });
     }
 
     @Override
@@ -211,4 +178,6 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
         this.presenter.detachView();
         super.onDestroy();
     }
+
+
 }

@@ -8,16 +8,23 @@ import android.widget.TextView;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.ui.activity.BaseActivity;
 
+import butterknife.Bind;
+
 
 public class BasePatternActivity extends BaseActivity {
 
     private static final int CLEAR_PATTERN_DELAY_MILLI = 2000;
 
-    protected TextView mMessageText;
-    protected PatternView mPatternView;
-    protected LinearLayout mButtonContainer;
-    protected Button mLeftButton;
-    protected Button mRightButton;
+    @Bind(R.id.pl_message_text)
+    TextView mMessageText;
+    @Bind(R.id.pl_pattern)
+    PatternView mPatternView;
+    @Bind(R.id.pl_button_container)
+    LinearLayout mButtonContainer;
+    @Bind(R.id.pl_left_button)
+    Button mLeftButton;
+    @Bind(R.id.pl_right_button)
+    Button mRightButton;
 
     private final Runnable clearPatternRunnable = new Runnable() {
         public void run() {
@@ -27,16 +34,20 @@ public class BasePatternActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.pl_base_pattern_activity);
-        mMessageText = (TextView)findViewById(R.id.pl_message_text);
-        mPatternView = (PatternView)findViewById(R.id.pl_pattern);
-        mButtonContainer = (LinearLayout)findViewById(R.id.pl_button_container);
-        mLeftButton = (Button)findViewById(R.id.pl_left_button);
-        mRightButton = (Button)findViewById(R.id.pl_right_button);
+    protected int getLayoutId() {
+        return R.layout.pl_base_pattern_activity;
     }
+
+    @Override
+    protected void initView(Bundle saveInstanceState) {
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
 
     protected void removeClearPatternRunnable() {
         mPatternView.removeCallbacks(clearPatternRunnable);
