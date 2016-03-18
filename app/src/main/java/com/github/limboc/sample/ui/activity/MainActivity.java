@@ -168,6 +168,7 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                 swipeToLoadLayout.setRefreshing(false);
 
             }else if(adapter != null){
+                presenter.setPage(presenter.getPage()-1);
                 adapter.loadMoreFailed();
             }
             T.showShort(message);
