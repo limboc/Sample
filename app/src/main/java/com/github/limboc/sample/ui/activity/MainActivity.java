@@ -87,6 +87,9 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
 
     @Override
     public void onRefresh() {
+        if(adapter != null){
+            adapter.loadMoreFinished();
+        }
         objectList = new ArrayList<>();
         presenter.setPage(1);
         presenter.loadData();
@@ -95,6 +98,11 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
 
     @Override
     public void onLoadMore(BaseRecyclerAdapter adapter) {
+        if(swipeToLoadLayout.isRefreshing() && adapter != null){
+            swipeToLoadLayout.setRefreshing(false);
+            adapter.loadMoreFinished();
+            return;
+        }
         presenter.setPage(presenter.getPage()+1);
         presenter.loadData();
     }
@@ -138,8 +146,8 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     }
 
     @Override
-    public void onLoadDataSuccess(List<Object> objectList) {
-        this.objectList = objectList;
+    public void onLoadDataSuccess(List<Object> list) {
+        objectList = list;
         if(presenter.getPage() == 1){
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);

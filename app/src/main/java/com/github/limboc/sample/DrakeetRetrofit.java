@@ -32,7 +32,7 @@ public class DrakeetRetrofit {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.gank.io/")
+                .baseUrl("http://gank.io/")
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))

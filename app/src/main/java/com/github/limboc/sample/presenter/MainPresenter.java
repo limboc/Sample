@@ -3,6 +3,7 @@ package com.github.limboc.sample.presenter;
 import com.github.limboc.sample.DrakeetFactory;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.iview.IMainView;
+import com.github.limboc.sample.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,24 +27,23 @@ public class MainPresenter extends BasePresenter<IMainView>{
     }
 
     public void loadData(){
-        if(page == 1){
-            objectList = new ArrayList<>();
-        }
         Subscription s = DrakeetFactory.getGankIOSingleton()
                 .getMeizhiData(limit, page)
                 .map(new HttpResultFunc<>())
+                //.switchMap(Observable::from)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .finallyDo(()-> {
 
                 })
                 .subscribe(meizhiData -> {
+                    if(page == 1){
+                        objectList = new ArrayList<>();
+                    }
                     if(meizhiData == null){
                         return;
                     }
-                    for(Meizhi item:meizhiData){
-                        objectList.add(item);
-                    }
+                    objectList.addAll(meizhiData);
                     getView().onLoadDataSuccess(objectList);
                 },throwable -> {
                     handleError(throwable);

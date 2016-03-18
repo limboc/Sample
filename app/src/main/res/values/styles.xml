@@ -17,6 +17,10 @@
         <item name="patternViewStyle">@style/PatternView.Light</item>
     </style>
 
+    <style name="OnClickableStyle">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
     <style name="DialogLoading" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
