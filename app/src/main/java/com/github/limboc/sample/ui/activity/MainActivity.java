@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.data.SimpleResult;
+import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
@@ -126,9 +128,10 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                 });
                 return true;
             case R.id.action_progress_dialog:
-                presenter.getMe(new ProgressSubscriber(o -> {
-                    L.d("main", "load completed");
-                }, context));
+                presenter.getMe( new ProgressSubscriber(context, o -> {
+                    //L.d("main", "load completed");
+                    L.d("main", o.toString());
+                }));
                 return true;
         }
         return super.onOptionsItemSelected(item);
