@@ -30,7 +30,6 @@ public class MainPresenter extends BasePresenter<IMainView>{
         Subscription s = DrakeetFactory.getGankIOSingleton()
                 .getMeizhiData(limit, page)
                 .map(new HttpResultFunc<>())
-                //.switchMap(Observable::from)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .finallyDo(()-> {
@@ -46,6 +45,8 @@ public class MainPresenter extends BasePresenter<IMainView>{
                     objectList.addAll(meizhiData);
                     getView().onLoadDataSuccess(objectList);
                 },throwable -> {
+                    int size = objectList.size();
+                    page = size % limit == 0 ? size/limit : size/limit+1;
                     handleError(throwable);
                 });
         mCompositeSubscription.add(s);

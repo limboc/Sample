@@ -175,11 +175,8 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     @Override
     public void showMessage(String message) {
         runOnUiThread(() -> {
-            if(presenter.getPage() == 1){
-                swipeToLoadLayout.setRefreshing(false);
-
-            }else if(adapter != null){
-                presenter.setPage(presenter.getPage()-1);
+            swipeToLoadLayout.setRefreshing(false);
+            if(adapter != null){
                 adapter.loadMoreFailed();
             }
             T.showShort(message);
