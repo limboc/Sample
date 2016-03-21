@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.SetPatternActivity"/>
+        <activity android:name=".ui.activity.ConfirmPatternActivity"/>
+        <activity android:name=".ui.activity.ResetPatternActivity"/>
     </application>
 
 </manifest>

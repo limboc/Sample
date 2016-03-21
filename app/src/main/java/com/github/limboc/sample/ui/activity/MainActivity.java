@@ -1,5 +1,6 @@
 package com.github.limboc.sample.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.L;
+import com.github.limboc.sample.utils.PatternLockUtils;
 import com.github.limboc.sample.utils.T;
 
 import java.util.ArrayList;
@@ -140,6 +142,14 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                     //L.d("main", "load completed");
                     L.d("main", o.toString());
                 }));
+                return true;
+            case R.id.action_pattern:
+                if(PatternLockUtils.hasPattern(context)){
+                    PatternLockUtils.confirmPatternIfHas(this);
+                }else{
+                    PatternLockUtils.setPatternByUser(context);
+
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
