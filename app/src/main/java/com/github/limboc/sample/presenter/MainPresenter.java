@@ -49,6 +49,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
                     page = size % limit == 0 ? size/limit : size/limit+1;
                     handleError(throwable);
                 });
+        mCompositeSubscription.clear();
         mCompositeSubscription.add(s);
     }
 
