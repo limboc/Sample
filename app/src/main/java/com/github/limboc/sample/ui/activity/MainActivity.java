@@ -2,10 +2,12 @@ package com.github.limboc.sample.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -208,5 +210,22 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            exitApp();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    long lastTime;
+    private void exitApp() {
+        if (System.currentTimeMillis() - lastTime > 2000) {
+            T.showShort("再按一次退出.");
+            lastTime = System.currentTimeMillis();
+        } else {
+            app.exit();
+        }
+    }
 }

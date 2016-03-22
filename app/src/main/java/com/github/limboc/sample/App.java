@@ -22,4 +22,8 @@ public class App extends Application {
         return app;
     }
 
+    public void exit(){
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

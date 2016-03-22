@@ -13,8 +13,26 @@
         <item name="colorPrimary">#ff263238</item>
         <item name="colorPrimaryDark">#ff21272b</item>
         <item name="colorControlNormal">@color/material_blue_grey_800</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/ActivityInOutAnimation</item>
+        <!--ScrollbarStyle-->
+        <item name="android:scrollbarFadeDuration">250</item>
+        <item name="android:scrollbarDefaultDelayBeforeFade">300</item>
+        <item name="android:scrollbarSize">3dip</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <!--<item name="android:scrollbarThumbVertical">@mipmap/thumb</item>-->
+        <item name="android:scrollbarTrackHorizontal">@null</item>
+        <item name="android:scrollbarTrackVertical">@null</item>
         <item name="patternViewStyle">@style/PatternView.Light</item>
+    </style>
+
+    <style name="ActivityInOutAnimation" parent="@android:style/Animation.Translucent">
+        <item name="android:activityOpenEnterAnimation">@anim/right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/right_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/left_out</item>
     </style>
 
     <style name="OnClickableStyle">

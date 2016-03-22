@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.limboc.sample.App;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.ui.widget.LoadingDialog;
 
@@ -21,12 +22,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     AlertDialog.Builder confirmDialog;
     Subscription rxSubscription;
     Context context;
+    App app;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(getLayoutId());
         context = this;
+        app = App.getInstance();
         ButterKnife.bind(this);
         initView(savedInstanceState);
         initData();
