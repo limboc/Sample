@@ -11,6 +11,7 @@ import com.github.limboc.sample.R;
 import com.github.limboc.sample.ui.widget.LoadingDialog;
 
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     LoadingDialog loadingDialog;
     AlertDialog.Builder confirmDialog;
+    Subscription rxSubscription;
     Context context;
 
     @Override
@@ -33,6 +35,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(rxSubscription != null && !rxSubscription.isUnsubscribed()) {
+            rxSubscription.unsubscribe();
+        }
     }
 
     protected abstract int getLayoutId();

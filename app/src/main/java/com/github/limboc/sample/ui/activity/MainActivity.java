@@ -13,6 +13,7 @@ import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.SimpleResult;
+import com.github.limboc.sample.data.bean.Character;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
@@ -25,12 +26,14 @@ import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.PatternLockUtils;
+import com.github.limboc.sample.utils.RxBus;
 import com.github.limboc.sample.utils.T;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
@@ -65,6 +68,12 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     @Override
     protected void initData() {
         swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
+        rxSubscription = RxBus.getDefault().toObserverable(Character.class)
+        .subscribe(character -> {
+            L.d("Main", character.getName());
+        }, throwable -> {
+            throwable.printStackTrace();
+        });
     }
 
     @Override
@@ -165,7 +174,7 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
             //adapter.addItemFactory(viewPagerItem);
             ImgItem imgItem = new ImgItem(getBaseContext());
             imgItem.setOnItemClickListener(position -> {
-                L.d("Main", position + "");
+                startActivity(new Intent(context, MovieActivity.class));
             });
             adapter.addItemFactory(imgItem);
             if(presenter.getLimit() == objectList.size()){
