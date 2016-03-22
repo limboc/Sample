@@ -68,9 +68,9 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     @Override
     protected void initData() {
         swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
-        rxSubscription = RxBus.getDefault().toObserverable(Character.class)
-        .subscribe(character -> {
-            L.d("Main", character.getName());
+        rxSubscription = RxBus.getDefault().toObserverable(SimpleResult.class)
+        .subscribe(simpleResult -> {
+            L.d("Main", (String)simpleResult.getResults());
         }, throwable -> {
             throwable.printStackTrace();
         });

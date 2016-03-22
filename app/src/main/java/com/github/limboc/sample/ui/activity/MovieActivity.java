@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.data.SimpleResult;
 import com.github.limboc.sample.data.bean.Character;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.RxBus;
@@ -24,7 +25,9 @@ public class MovieActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle saveInstanceState) {
-        tvName.setOnClickListener(v -> RxBus.getDefault().post(new Character("hah", "url")));
+        SimpleResult result = new SimpleResult<String>();
+        result.setResults("123");
+        tvName.setOnClickListener(v -> RxBus.getDefault().post(result));
     }
 
     @Override
