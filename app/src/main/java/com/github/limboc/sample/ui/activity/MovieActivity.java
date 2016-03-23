@@ -5,8 +5,6 @@ import android.widget.TextView;
 
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.SimpleResult;
-import com.github.limboc.sample.data.bean.Character;
-import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.RxBus;
 
 import butterknife.Bind;
@@ -20,18 +18,19 @@ public class MovieActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.item_hero;
+        return R.layout.layout_movie;
     }
 
     @Override
     protected void initView(Bundle saveInstanceState) {
-        SimpleResult result = new SimpleResult<String>();
-        result.setResults("123");
-        tvName.setOnClickListener(v -> RxBus.getDefault().post(result));
+
     }
 
     @Override
     protected void initData() {
+        SimpleResult result = new SimpleResult<String>();
+        result.setResults("123");
+        tvName.setOnClickListener(v -> RxBus.getDefault().post(result));
 
     }
 }

@@ -21,4 +21,9 @@
         <attr name="patternViewStyle" format="reference" />
     </declare-styleable>
 
+
+    <declare-styleable name="PasswordView">
+        <attr name="useStrikeThrough" format="boolean" />
+    </declare-styleable>
+
 </resources>
