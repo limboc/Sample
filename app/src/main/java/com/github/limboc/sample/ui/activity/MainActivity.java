@@ -141,7 +141,11 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                 recreate();
                 return true;
             case R.id.action_bottom_sheet_dialog:
-                BottomSheetDialogView.show(this, mDayNightMode);
+                BottomSheetDialogView
+                        .show(this, mDayNightMode)
+                        .setOnItemClickListener(position->{
+                            T.showShort(position + "");
+                        });
                 return true;
             case R.id.action_confirm_dialog:
                 showConfirmDialog(true, "hahhaha", (dialog, which) -> {

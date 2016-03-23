@@ -11,14 +11,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.ui.item.OnItemClickListener;
+import com.github.limboc.sample.utils.T;
 
 public class BottomSheetDialogView {
 
 
     private static String[] sStringList;
+    private BottomSheetDialog dialog;
+    private OnItemClickListener listener;
 
     static {
-        sStringList = new String[50];
+        sStringList = new String[10];
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < sStringList.length; i++) {
             stringBuilder.append(i + 1);
@@ -33,7 +37,7 @@ public class BottomSheetDialogView {
      * @param dayNightMode current day night mode
      */
     public BottomSheetDialogView(Context context, int dayNightMode) {
-        BottomSheetDialog dialog = new BottomSheetDialog(context);
+        dialog = new BottomSheetDialog(context);
         dialog.getDelegate().setLocalNightMode(dayNightMode);
 
         View view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_dialog_recycler_view, null);
@@ -46,8 +50,8 @@ public class BottomSheetDialogView {
         dialog.show();
     }
 
-    public static void show(Context context, int dayNightMode) {
-        new BottomSheetDialogView(context, dayNightMode);
+    public static BottomSheetDialogView show(Context context, int dayNightMode) {
+        return new BottomSheetDialogView(context, dayNightMode);
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,7 +64,7 @@ public class BottomSheetDialogView {
         }
     }
 
-    private static class SimpleAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private class SimpleAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -72,6 +76,13 @@ public class BottomSheetDialogView {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.mTextView.setText(sStringList[position]);
+            holder.mTextView.setOnClickListener(v->{
+                dialog.dismiss();
+                if(listener != null){
+                    listener.onClick(position);
+                }
+            });
+
         }
 
         @Override
@@ -79,4 +90,10 @@ public class BottomSheetDialogView {
             return sStringList.length;
         }
     }
+
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
+
 }
