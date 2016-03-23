@@ -11,11 +11,10 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.github.limboc.sample.R;
 
-public class PasswordView extends EditText {
+public class PasswordEditText extends EditText {
 
     private Drawable eye;
     private Drawable eyeWithStrike;
@@ -25,22 +24,22 @@ public class PasswordView extends EditText {
     private boolean useStrikeThrough = false;
     private Typeface typeface;
 
-    public PasswordView(Context context) {
+    public PasswordEditText(Context context) {
         super(context);
         init(null);
     }
 
-    public PasswordView(Context context, AttributeSet attrs) {
+    public PasswordEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public PasswordView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP) public PasswordView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP) public PasswordEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
@@ -49,10 +48,10 @@ public class PasswordView extends EditText {
         if (attrs != null) {
             TypedArray a = getContext().getTheme().obtainStyledAttributes(
                     attrs,
-                    R.styleable.PasswordView,
+                    R.styleable.PasswordEditText,
                     0, 0);
             try {
-                useStrikeThrough = a.getBoolean(R.styleable.PasswordView_useStrikeThrough, false);
+                useStrikeThrough = a.getBoolean(R.styleable.PasswordEditText_useStrikeThrough, false);
             } finally {
                 a.recycle();
             }
@@ -72,6 +71,7 @@ public class PasswordView extends EditText {
         Drawable[] drawables = getCompoundDrawables();
         setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1], drawable, drawables[3]);
         eye.setAlpha(visible && !useStrikeThrough ? VISIBILITY_ENABLED : VISIBLITY_DISABLED);
+        setSelection(getText().toString().length());
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {

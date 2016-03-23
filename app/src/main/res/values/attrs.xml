@@ -22,8 +22,12 @@
     </declare-styleable>
 
 
-    <declare-styleable name="PasswordView">
+    <declare-styleable name="PasswordEditText">
         <attr name="useStrikeThrough" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DrawClickableTextView">
+        <attr name="isOpen" format="boolean" />
     </declare-styleable>
 
 </resources>

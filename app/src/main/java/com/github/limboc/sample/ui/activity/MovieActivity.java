@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.SimpleResult;
+import com.github.limboc.sample.ui.widget.DrawClickableTextView;
 import com.github.limboc.sample.utils.RxBus;
 
 import butterknife.Bind;
@@ -14,7 +15,7 @@ import butterknife.Bind;
  */
 public class MovieActivity extends BaseActivity {
     @Bind(R.id.tvName)
-    TextView tvName;
+    DrawClickableTextView tvName;
 
     @Override
     protected int getLayoutId() {
@@ -30,7 +31,9 @@ public class MovieActivity extends BaseActivity {
     protected void initData() {
         SimpleResult result = new SimpleResult<String>();
         result.setResults("123");
-        tvName.setOnClickListener(v -> RxBus.getDefault().post(result));
-
+        tvName.setOnTextViewListener(isOpen -> {
+            result.setResults(isOpen + "");
+            RxBus.getDefault().post(result);
+        });
     }
 }

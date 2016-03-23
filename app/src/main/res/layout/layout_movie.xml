@@ -11,7 +11,7 @@
     android:background="@drawable/selector_item_hero">
 
 
-    <com.github.limboc.sample.ui.widget.PasswordView
+    <com.github.limboc.sample.ui.widget.PasswordEditText
         android:id="@+id/password_strike"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,12 +19,13 @@
         android:hint="password"
         app:useStrikeThrough="true"/>
 
-    <TextView
+    <com.github.limboc.sample.ui.widget.DrawClickableTextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="123456789"
         android:textAppearance="?android:textAppearanceLarge"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorPrimary"
+        app:useStrikeThrough="false"/>
 </LinearLayout>
