@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -34,6 +35,7 @@ import android.view.animation.Interpolator;
 
 
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.utils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1094,7 +1096,9 @@ public class PatternView extends View {
                             boolean partOfPattern, float alpha) {
         mPaint.setColor(getCurrentColor(partOfPattern));
         mPaint.setAlpha((int) (alpha * 255));
-        canvas.drawCircle(centerX, centerY, radius, mPaint);
+        //canvas.drawCircle(centerX, centerY, radius, mPaint);
+        canvas.drawBitmap(BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pattern0)), centerX, centerY, mPaint);
+        //canvas.setBitmap(BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pattern0)));
     }
 
     @Override

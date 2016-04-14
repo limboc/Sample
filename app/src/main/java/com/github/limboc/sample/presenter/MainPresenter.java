@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter<IMainView>{
 
     private int page=1, limit = 10;
-    private List<Object> objectList;
+    private List<Object> objectList = new ArrayList<>();
 
     public MainPresenter() {
 
@@ -37,7 +37,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
                 })
                 .subscribe(meizhiData -> {
                     if(page == 1){
-                        objectList = new ArrayList<>();
+                        objectList.clear();
                     }
                     if(meizhiData == null){
                         return;

@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:divider="?dividerHorizontal"
     android:orientation="vertical"
-    android:showDividers="middle">
+    android:showDividers="middle"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"

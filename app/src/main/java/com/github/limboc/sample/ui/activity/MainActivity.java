@@ -163,7 +163,6 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                     PatternLockUtils.confirmPatternIfHas(this);
                 }else{
                     PatternLockUtils.setPatternByUser(context);
-
                 }
                 return true;
         }
