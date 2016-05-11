@@ -2,15 +2,16 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+version = "0.0.1"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
+    resourcePrefix "refresh"
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName version
     }
     buildTypes {
         release {
@@ -18,18 +19,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
-
 }
 
-def siteUrl = 'https://github.com/limboc/sample'      // 项目的主页
-def gitUrl =  'https://github.com/limboc/sample.git'   // Git仓库的url
+def siteUrl = 'https://github.com/limboc/sample'     // 项目的主页
+def gitUrl = 'https://github.com/limboc/sample.git'   // Git仓库的url
 
 group = "com.github.limboc"
 
@@ -42,7 +40,7 @@ install {
 
                 packaging 'aar'
                 // Add your description here
-                name 'A Refresh Layout' 	//项目描述
+                name 'Refresh Sample' 	//项目描述
                 url siteUrl
                 // Set your license
                 licenses {
@@ -53,7 +51,7 @@ install {
                 }
                 developers {
                     developer {
-                        id 'limboc'		//填写的一些基本信息
+                        id 'limboc'        //填写的一些基本信息
                         name 'limboc'
                         email 'cyz0429@gmail.com'
                     }
@@ -108,6 +106,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives javadocJar
 }
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 bintray {
@@ -123,4 +122,3 @@ bintray {
         publish = true
     }
 }
-

@@ -32,9 +32,6 @@ public class MainPresenter extends BasePresenter<IMainView>{
                 .map(new HttpResultFunc<>())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .finallyDo(()-> {
-
-                })
                 .subscribe(meizhiData -> {
                     if(page == 1){
                         objectList.clear();
