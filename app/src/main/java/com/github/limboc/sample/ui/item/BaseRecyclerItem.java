@@ -17,9 +17,7 @@ public abstract class BaseRecyclerItem<BEAN, ITEM_FACTORY extends BaseRecyclerIt
         onFindViews(convertView);
         onConfigViews(convertView.getContext());
         if(null != itemFactory.onItemClickListener){
-            convertView.setOnClickListener((listener)->{
-                itemFactory.onItemClickListener.onClick(getPosition());
-            });
+            convertView.setOnClickListener((listener)-> itemFactory.onItemClickListener.onClick(getPosition()));
         }
 
     }

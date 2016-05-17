@@ -26,9 +26,4 @@
         android:orderInCategory="100"
         android:title="Progress Dialog"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_pattern"
-        android:orderInCategory="100"
-        android:title="Pattern Lock"
-        app:showAsAction="never" />
 </menu>

@@ -2,7 +2,6 @@ package com.github.limboc.sample.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +14,6 @@ import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.SimpleResult;
-import com.github.limboc.sample.data.bean.Character;
-import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
@@ -27,7 +24,6 @@ import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.L;
-import com.github.limboc.sample.utils.PatternLockUtils;
 import com.github.limboc.sample.utils.RxBus;
 import com.github.limboc.sample.utils.T;
 
@@ -35,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
@@ -158,13 +153,6 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
                     L.d("main", o.toString());
                 }));
                 return true;
-            case R.id.action_pattern:
-                if(PatternLockUtils.hasPattern(context)){
-                    PatternLockUtils.confirmPatternIfHas(this);
-                }else{
-                    PatternLockUtils.setPatternByUser(context);
-                }
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,18 +164,15 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);
             viewPagerItem = new ViewPagerItem(getBaseContext());
-            //adapter.addItemFactory(viewPagerItem);
             ImgItem imgItem = new ImgItem(getBaseContext());
-            imgItem.setOnItemClickListener(position -> {
-                startActivity(new Intent(context, MovieActivity.class));
-            });
+            imgItem.setOnItemClickListener(position -> startActivity(new Intent(context, MovieActivity.class)));
             adapter.addItemFactory(imgItem);
-            if(presenter.getLimit() == objectList.size()){
+            if(presenter.hasNext()){
                 adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
             }
             recyclerView.setAdapter(adapter);
         }else{
-            if(presenter.getPage() * presenter.getLimit() > objectList.size()){
+            if(!presenter.hasNext()){
                 adapter.loadMoreEnd();
             }
             adapter.loadMoreFinished();
@@ -198,13 +183,11 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
 
     @Override
     public void showMessage(String message) {
-        runOnUiThread(() -> {
-            swipeToLoadLayout.setRefreshing(false);
-            if(adapter != null){
-                adapter.loadMoreFailed();
-            }
-            T.showShort(message);
-        });
+        swipeToLoadLayout.setRefreshing(false);
+        if(adapter != null){
+            adapter.loadMoreFailed();
+        }
+        T.showShort(message);
     }
 
     @Override

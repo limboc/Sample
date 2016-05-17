@@ -66,8 +66,9 @@ public class MainPresenter extends BasePresenter<IMainView>{
         this.page = page;
     }
 
-    public int getLimit() {
-        return limit;
+    public boolean hasNext(){
+        int size = objectList.size();
+        return (size != 0 && size % limit == 0) ? true:false;
     }
 
 }

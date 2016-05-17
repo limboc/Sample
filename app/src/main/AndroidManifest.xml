@@ -27,9 +27,6 @@
             android:name=".ui.activity.ConfirmPatternActivity"
             android:launchMode="singleTask"/>
         <activity
-            android:name=".ui.activity.ResetPatternActivity"
-            android:launchMode="singleTask"/>
-        <activity
             android:name=".ui.activity.MovieActivity"
             android:launchMode="singleTask"/>
     </application>

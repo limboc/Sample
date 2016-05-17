@@ -25,7 +25,6 @@
         <!--<item name="android:scrollbarThumbVertical">@mipmap/thumb</item>-->
         <item name="android:scrollbarTrackHorizontal">@null</item>
         <item name="android:scrollbarTrackVertical">@null</item>
-        <item name="patternViewStyle">@style/PatternView.Light</item>
     </style>
 
     <style name="ActivityInOutAnimation" parent="@android:style/Animation.Translucent">
@@ -55,20 +54,5 @@
     </style>
 
 
-    <style name="Base.PatternView" parent="">
-        <item name="pl_aspect">square</item>
-    </style>
-
-    <style name="PatternView" parent="Base.PatternView">
-        <item name="pl_regularColor">?colorControlNormal</item>
-        <item name="pl_errorColor">#fff4511e</item>
-        <item name="pl_successColor">?colorControlActivated</item>
-    </style>
-
-    <style name="PatternView.Light" parent="Base.PatternView">
-        <item name="pl_regularColor">?colorControlNormal</item>
-        <item name="pl_errorColor">#fff4511e</item>
-        <item name="pl_successColor">?colorControlActivated</item>
-    </style>
 
 </resources>
