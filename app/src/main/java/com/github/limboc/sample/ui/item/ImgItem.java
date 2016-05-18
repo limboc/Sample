@@ -10,6 +10,9 @@ import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class ImgItem extends BaseRecyclerItemFactory<ImgItem.ImgRecyclerItem> {
 
@@ -33,7 +36,8 @@ public class ImgItem extends BaseRecyclerItemFactory<ImgItem.ImgRecyclerItem> {
 
     public class ImgRecyclerItem extends BaseRecyclerItem<Meizhi, ImgItem> {
 
-        private ImageView iv_avatar;
+        @Bind(R.id.iv_avatar)
+        ImageView iv_avatar;
 
         protected ImgRecyclerItem(ViewGroup parent, ImgItem factory) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false), factory);
@@ -41,7 +45,7 @@ public class ImgItem extends BaseRecyclerItemFactory<ImgItem.ImgRecyclerItem> {
 
         @Override
         protected void onFindViews(View convertView) {
-            iv_avatar = (ImageView) convertView.findViewById(R.id.iv_avatar);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override
