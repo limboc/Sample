@@ -9,20 +9,24 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.github.limboc.sample.App;
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.presenter.BasePresenter;
+import com.github.limboc.sample.presenter.iview.IBaseView;
 import com.github.limboc.sample.ui.widget.LoadingDialog;
+import com.github.limboc.sample.utils.RxManager;
+import com.github.limboc.sample.utils.TUtil;
 
 import butterknife.ButterKnife;
 import rx.Subscription;
 
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements IBaseView {
 
 
     LoadingDialog loadingDialog;
     AlertDialog.Builder confirmDialog;
-    Subscription rxSubscription;
     Context context;
     App app;
+    T presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.setContentView(getLayoutId());
         context = this;
         app = App.getInstance();
+        presenter = TUtil.getT(this, 0);
+        presenter.attachView(this);
         ButterKnife.bind(this);
         initView(savedInstanceState);
         initData();
@@ -38,9 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(rxSubscription != null && !rxSubscription.isUnsubscribed()) {
-            rxSubscription.unsubscribe();
-        }
+        presenter.detachView();
     }
 
     protected abstract int getLayoutId();

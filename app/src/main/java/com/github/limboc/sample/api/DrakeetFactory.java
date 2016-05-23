@@ -1,4 +1,4 @@
-package com.github.limboc.sample;
+package com.github.limboc.sample.api;
 
 
 public class DrakeetFactory {

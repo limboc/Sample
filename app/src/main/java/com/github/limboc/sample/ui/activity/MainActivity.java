@@ -23,6 +23,7 @@ import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
 import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
+import com.github.limboc.sample.utils.Event;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.RxBus;
 import com.github.limboc.sample.utils.T;
@@ -32,7 +33,7 @@ import java.util.List;
 
 import butterknife.Bind;
 
-public class MainActivity extends BaseActivity implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
+public class MainActivity extends BaseActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -44,7 +45,6 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
     private BaseRecyclerAdapter adapter;
     private ViewPagerItem viewPagerItem;
     private int mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
-    private MainPresenter presenter;
 
     @Override
     protected int getLayoutId() {
@@ -58,18 +58,14 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
         layoutManager.setRecycleChildrenOnDetach(true);
         recyclerView.setLayoutManager(layoutManager);
         swipeToLoadLayout.setOnRefreshListener(this);
-        presenter = new MainPresenter();
-        presenter.attachView(this);
     }
 
     @Override
     protected void initData() {
         swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
-        rxSubscription = RxBus.getDefault().toObserverable(SimpleResult.class)
-        .subscribe(simpleResult -> {
-            L.d("Main", (String)simpleResult.getResults());
-        }, throwable -> {
-            throwable.printStackTrace();
+        presenter.on(Event.CLICK, (object) -> {
+            L.d("Main", object.toString());
+
         });
     }
 
@@ -188,12 +184,6 @@ public class MainActivity extends BaseActivity implements OnRefreshListener, OnR
             adapter.loadMoreFailed();
         }
         T.showShort(message);
-    }
-
-    @Override
-    protected void onDestroy() {
-        this.presenter.detachView();
-        super.onDestroy();
     }
 
     @Override

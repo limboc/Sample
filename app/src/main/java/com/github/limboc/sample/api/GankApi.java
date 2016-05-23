@@ -1,4 +1,4 @@
-package com.github.limboc.sample;
+package com.github.limboc.sample.api;
 
 
 import com.github.limboc.sample.data.SimpleResult;

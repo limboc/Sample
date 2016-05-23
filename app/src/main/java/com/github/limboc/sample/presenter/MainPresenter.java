@@ -1,9 +1,8 @@
 package com.github.limboc.sample.presenter;
 
-import com.github.limboc.sample.DrakeetFactory;
+import com.github.limboc.sample.api.DrakeetFactory;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.iview.IMainView;
-import com.github.limboc.sample.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +45,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
                     page = size % limit == 0 ? size/limit : size/limit+1;
                     handleError(throwable);
                 });
-        mCompositeSubscription.clear();
-        mCompositeSubscription.add(s);
+        rxManager.add(s);
     }
 
     public void getMe(Subscriber<List<Meizhi>> subscriber){
