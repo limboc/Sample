@@ -12,11 +12,9 @@ import com.github.limboc.sample.R;
 import com.github.limboc.sample.presenter.BasePresenter;
 import com.github.limboc.sample.presenter.iview.IBaseView;
 import com.github.limboc.sample.ui.widget.LoadingDialog;
-import com.github.limboc.sample.utils.RxManager;
 import com.github.limboc.sample.utils.TUtil;
 
 import butterknife.ButterKnife;
-import rx.Subscription;
 
 
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements IBaseView {
