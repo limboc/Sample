@@ -23,7 +23,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile rootProject.ext.dependencies["appcompat-v7"]
 }
 
 def siteUrl = 'https://github.com/limboc/sample'     // 项目的主页
