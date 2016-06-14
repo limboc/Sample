@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
-import com.github.limboc.sample.data.SimpleResult;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
@@ -22,16 +21,17 @@ import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
 import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
+import com.github.limboc.sample.ui.widget.MultipleStatusView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.Event;
 import com.github.limboc.sample.utils.L;
-import com.github.limboc.sample.utils.RxBus;
 import com.github.limboc.sample.utils.T;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
@@ -41,6 +41,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
     SwipeToLoadLayout swipeToLoadLayout;
     @Bind(R.id.swipe_target)
     RecyclerView recyclerView;
+    @Bind(R.id.multipleStatusView)
+    MultipleStatusView multipleStatusView;
     private List<Object> objectList;
     private BaseRecyclerAdapter adapter;
     private ViewPagerItem viewPagerItem;
@@ -62,17 +64,17 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
     @Override
     protected void initData() {
-        swipeToLoadLayout.post(() -> swipeToLoadLayout.setRefreshing(true));
-        presenter.on(Event.CLICK, (object) -> {
-            L.d("Main", object.toString());
 
-        });
+        multipleStatusView.setOnRetryClickListener(l-> onRefresh());
+        multipleStatusView.showLoading();
+        onRefresh();
+        presenter.on(Event.CLICK, (object) -> L.d("Main", object.toString()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(viewPagerItem != null){
+        if (viewPagerItem != null) {
             viewPagerItem.start();
         }
     }
@@ -83,7 +85,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
         if (swipeToLoadLayout.isRefreshing()) {
             swipeToLoadLayout.setRefreshing(false);
         }
-        if(viewPagerItem != null){
+        if (viewPagerItem != null) {
             viewPagerItem.stop();
         }
 
@@ -91,7 +93,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
     @Override
     public void onRefresh() {
-        if(adapter != null){
+        if (adapter != null) {
             adapter.loadMoreFinished();
         }
         objectList = new ArrayList<>();
@@ -102,12 +104,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
     @Override
     public void onLoadMore(BaseRecyclerAdapter adapter) {
-        if(swipeToLoadLayout.isRefreshing() && adapter != null){
+        if (swipeToLoadLayout.isRefreshing() && adapter != null) {
             swipeToLoadLayout.setRefreshing(false);
             adapter.loadMoreFinished();
             return;
         }
-        presenter.setPage(presenter.getPage()+1);
+        presenter.setPage(presenter.getPage() + 1);
         presenter.loadData();
     }
 
@@ -120,7 +122,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_day_night_no:
                 mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
                 getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -134,7 +136,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
             case R.id.action_bottom_sheet_dialog:
                 BottomSheetDialogView
                         .show(this, mDayNightMode)
-                        .setOnItemClickListener(position->{
+                        .setOnItemClickListener(position -> {
                             T.showShort(position + "");
                         });
                 return true;
@@ -144,7 +146,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
                 });
                 return true;
             case R.id.action_progress_dialog:
-                presenter.getMe( new ProgressSubscriber(context, o -> {
+                presenter.getMe(new ProgressSubscriber(context, o -> {
                     //L.d("main", "load completed");
                     L.d("main", o.toString());
                 }));
@@ -156,31 +158,33 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
     @Override
     public void onLoadDataSuccess(List<Object> list) {
         objectList = list;
-        if(presenter.getPage() == 1){
+        if (presenter.getPage() == 1) {
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);
             viewPagerItem = new ViewPagerItem(getBaseContext());
             ImgItem imgItem = new ImgItem(getBaseContext());
             imgItem.setOnItemClickListener(position -> startActivity(new Intent(context, MovieActivity.class)));
             adapter.addItemFactory(imgItem);
-            if(presenter.hasNext()){
+            if (presenter.hasNext()) {
                 adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
             }
             recyclerView.setAdapter(adapter);
-        }else{
-            if(!presenter.hasNext()){
+        } else {
+            if (!presenter.hasNext()) {
                 adapter.loadMoreEnd();
             }
             adapter.loadMoreFinished();
             adapter.notifyDataSetChanged();
         }
+        multipleStatusView.showContent();
     }
 
 
     @Override
     public void showMessage(String message) {
+        multipleStatusView.showError();
         swipeToLoadLayout.setRefreshing(false);
-        if(adapter != null){
+        if (adapter != null) {
             adapter.loadMoreFailed();
         }
         T.showShort(message);
@@ -195,13 +199,5 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
         return super.onKeyDown(keyCode, event);
     }
 
-    long lastTime;
-    private void exitApp() {
-        if (System.currentTimeMillis() - lastTime > 2000) {
-            T.showShort("再按一次退出.");
-            lastTime = System.currentTimeMillis();
-        } else {
-            app.exit();
-        }
-    }
+
 }

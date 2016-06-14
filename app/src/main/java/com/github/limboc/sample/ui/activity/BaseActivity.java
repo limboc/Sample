@@ -78,4 +78,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         confirmDialog.show();
     }
 
+    long lastTime;
+    public void exitApp() {
+        if (System.currentTimeMillis() - lastTime > 2000) {
+            com.github.limboc.sample.utils.T.showShort("再按一次退出.");
+            lastTime = System.currentTimeMillis();
+        } else {
+            app.exit();
+        }
+    }
+
 }
