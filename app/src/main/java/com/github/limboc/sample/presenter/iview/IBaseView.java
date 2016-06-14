@@ -5,6 +5,6 @@ package com.github.limboc.sample.presenter.iview;
  */
 public interface IBaseView {
 
-    void showMessage(String message);
+    void handleThrowable(Throwable throwable);
 
 }

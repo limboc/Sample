@@ -20,7 +20,7 @@ import butterknife.Bind;
 /**
  * Created by Chen on 2016/3/22.
  */
-public class MovieActivity extends BaseActivity<BasePresenter> {
+public class MovieActivity extends BaseLoadActivity<BasePresenter> {
     @Bind(R.id.tvName)
     DrawClickableTextView tvName;
 
@@ -44,8 +44,5 @@ public class MovieActivity extends BaseActivity<BasePresenter> {
         });
     }
 
-    @Override
-    public void showMessage(String message) {
 
-    }
 }

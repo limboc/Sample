@@ -25,6 +25,7 @@ import com.github.limboc.sample.ui.widget.MultipleStatusView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
 import com.github.limboc.sample.utils.Event;
 import com.github.limboc.sample.utils.L;
+import com.github.limboc.sample.utils.NetworkUtils;
 import com.github.limboc.sample.utils.T;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
+public class MainActivity extends BaseLoadActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -93,6 +94,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
     @Override
     public void onRefresh() {
+        if(!NetworkUtils.isConnected(context)){
+            multipleStatusView.showNoNetwork();
+            return;
+        }
         if (adapter != null) {
             adapter.loadMoreFinished();
         }
@@ -181,14 +186,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements OnRefre
 
 
     @Override
-    public void showMessage(String message) {
-        multipleStatusView.showError();
+    public void handleThrowable(Throwable throwable) {
+        super.handleThrowable(throwable);
+        if(objectList.size() == 0){
+            multipleStatusView.showError();
+        }
         swipeToLoadLayout.setRefreshing(false);
         if (adapter != null) {
             adapter.loadMoreFailed();
         }
-        T.showShort(message);
+
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

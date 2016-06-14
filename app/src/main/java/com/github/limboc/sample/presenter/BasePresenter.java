@@ -85,10 +85,6 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
 
     public void handleError(Throwable throwable){
         throwable.printStackTrace();
-        if(throwable instanceof SocketException || throwable instanceof ConnectException){
-            getView().showMessage("连不到服务器");
-        }else{
-            getView().showMessage(throwable.getMessage());
-        }
+        getView().handleThrowable(throwable);
     }
 }
