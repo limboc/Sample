@@ -32,9 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
-public class MainActivity extends BaseLoadActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
+public class MainActivity extends BasePresenterActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
