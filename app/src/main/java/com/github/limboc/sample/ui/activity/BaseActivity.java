@@ -20,20 +20,29 @@ public abstract class BaseActivity extends AppCompatActivity{
     LoadingDialog loadingDialog;
     AlertDialog.Builder confirmDialog;
     Context context;
-    App app;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(getLayoutId());
         context = this;
-        app = App.getInstance();
+        App.getInstance().addActivity(this);
         ButterKnife.bind(this);
         initView(savedInstanceState);
         initData();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.getInstance().removeActivity(this);
+    }
 
     protected abstract int getLayoutId();
 
@@ -74,8 +83,13 @@ public abstract class BaseActivity extends AppCompatActivity{
             com.github.limboc.sample.utils.T.showShort("再按一次退出.");
             lastTime = System.currentTimeMillis();
         } else {
-            app.exit();
+            exit();
         }
+    }
+
+    public void exit(){
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
 }

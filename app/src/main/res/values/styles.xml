@@ -12,6 +12,7 @@
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">#ff263238</item>
         <item name="colorPrimaryDark">#ff21272b</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/material_blue_grey_800</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
