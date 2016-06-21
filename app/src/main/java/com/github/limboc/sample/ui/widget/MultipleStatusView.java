@@ -6,9 +6,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.ui.widget.progressbar.LoadingDrawable;
+import com.github.limboc.sample.ui.widget.progressbar.MaterialLoadingRenderer;
 
 
 public class MultipleStatusView extends RelativeLayout {
@@ -34,6 +37,7 @@ public class MultipleStatusView extends RelativeLayout {
     private int mNoNetworkViewResId;
     private int mContentViewResId;
     private int mViewStatus;
+    private LoadingDrawable loadingDrawable;
 
     private LayoutInflater mInflater;
     private OnClickListener mOnRetryClickListener;
@@ -117,9 +121,13 @@ public class MultipleStatusView extends RelativeLayout {
         mViewStatus = STATUS_LOADING;
         if(null == mLoadingView){
             mLoadingView = mInflater.inflate(mLoadingViewResId, null);
+            ImageView ivLoading = (ImageView) mLoadingView.findViewById(R.id.iv_loading);
+            loadingDrawable = new LoadingDrawable(new MaterialLoadingRenderer(getContext()));
+            ivLoading.setImageDrawable(loadingDrawable);
             addView(mLoadingView,0, mLayoutParams);
         }
         showViewByStatus(mViewStatus);
+        loadingDrawable.start();
     }
     /** 显示无网络视图 */
     public final void showNoNetwork() {
@@ -150,6 +158,7 @@ public class MultipleStatusView extends RelativeLayout {
     }
 
     private void showViewByStatus(int viewStatus) {
+        stopLoadingDrawable();
         if(null != mLoadingView){
             mLoadingView.setVisibility(viewStatus == STATUS_LOADING ? View.VISIBLE : View.GONE);
         }
@@ -164,6 +173,12 @@ public class MultipleStatusView extends RelativeLayout {
         }
         if(null != mContentView){
             mContentView.setVisibility(viewStatus == STATUS_CONTENT ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void stopLoadingDrawable(){
+        if(null != loadingDrawable){
+            loadingDrawable.stop();
         }
     }
 

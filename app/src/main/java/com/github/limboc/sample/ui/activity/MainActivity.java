@@ -19,7 +19,6 @@ import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
 import com.github.limboc.sample.ui.item.ImgItem;
 import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
-import com.github.limboc.sample.ui.item.ViewPagerItem;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.MultipleStatusView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
@@ -45,7 +44,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     MultipleStatusView multipleStatusView;
     private List<Object> objectList;
     private BaseRecyclerAdapter adapter;
-    private ViewPagerItem viewPagerItem;
     private int mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
 
     @Override
@@ -65,19 +63,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     @Override
     protected void initData() {
 
-        multipleStatusView.setOnRetryClickListener(l-> onRefresh());
-        multipleStatusView.showLoading();
-        onRefresh();
+        multipleStatusView.setOnRetryClickListener(l-> refresh());
+        refresh();
         presenter.on(Event.CLICK, (object) -> L.d("Main", object.toString()));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (viewPagerItem != null) {
-            viewPagerItem.start();
-        }
-    }
+
 
     @Override
     public void onPause() {
@@ -85,10 +76,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
         if (swipeToLoadLayout.isRefreshing()) {
             swipeToLoadLayout.setRefreshing(false);
         }
-        if (viewPagerItem != null) {
-            viewPagerItem.stop();
-        }
 
+    }
+
+    private void refresh(){
+        multipleStatusView.showLoading();
+        onRefresh();
     }
 
     @Override
@@ -165,7 +158,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
         if (presenter.getPage() == 1) {
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);
-            viewPagerItem = new ViewPagerItem(getBaseContext());
             ImgItem imgItem = new ImgItem(getBaseContext());
             imgItem.setOnItemClickListener(position -> startActivity(new Intent(context, MovieActivity.class)));
             adapter.addItemFactory(imgItem);
@@ -180,14 +172,18 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
             adapter.loadMoreFinished();
             adapter.notifyDataSetChanged();
         }
-        multipleStatusView.showContent();
+        if(objectList.isEmpty()){
+            multipleStatusView.showEmpty();
+        }else{
+            multipleStatusView.showEmpty();
+        }
     }
 
 
     @Override
     public void handleThrowable(Throwable throwable) {
         super.handleThrowable(throwable);
-        if(objectList.size() == 0){
+        if(objectList.isEmpty()){
             multipleStatusView.showError();
         }
         swipeToLoadLayout.setRefreshing(false);
