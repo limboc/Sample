@@ -1,5 +1,6 @@
 package com.github.limboc.sample.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
@@ -19,6 +20,7 @@ import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
 import com.github.limboc.sample.ui.item.ImgItem;
 import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
+import com.github.limboc.sample.ui.utils.MultiImageSelector;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.MultipleStatusView;
 import com.github.limboc.sample.ui.widget.progressdialog.ProgressSubscriber;
@@ -26,6 +28,7 @@ import com.github.limboc.sample.utils.Event;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.NetworkUtils;
 import com.github.limboc.sample.utils.T;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     private List<Object> objectList;
     private BaseRecyclerAdapter adapter;
     private int mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
+    private ArrayList<String> mSelectPath;
 
     @Override
     protected int getLayoutId() {
@@ -65,7 +69,19 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
 
         multipleStatusView.setOnRetryClickListener(l-> refresh());
         refresh();
-        presenter.on(Event.CLICK, (object) -> L.d("Main", object.toString()));
+        presenter.on(Event.CLICK, object -> L.d("Main", object.toString()));
+        presenter.on(Event.PICK_IMAGE_SUCCESS, object -> {
+            if(object instanceof Intent){
+                Intent data = (Intent) object;
+                mSelectPath = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                StringBuilder sb = new StringBuilder();
+                for(String p: mSelectPath){
+                    sb.append(p);
+                    sb.append("\n");
+                }
+                L.d("aaaaa:", sb.toString());
+            }
+        });
     }
 
 
@@ -138,9 +154,21 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
                         });
                 return true;
             case R.id.action_confirm_dialog:
-                showConfirmDialog(true, "hahhaha", (dialog, which) -> {
+                RxPermissions.getInstance(context)
+                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                showConfirmDialog(true, "选择照片", (dialog, which) ->
+                                        MultiImageSelector.create(context)
+                                                .showCamera(true)
+                                                .count(6)
+                                                .multi()
+                                                .origin(mSelectPath)
+                                                .start(this));
+                            }
+                        });
 
-                });
                 return true;
             case R.id.action_progress_dialog:
                 presenter.getMe(new ProgressSubscriber(context, o -> {

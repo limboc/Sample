@@ -17,5 +17,6 @@ ext {
                     "retrofit-gson"     : "com.squareup.retrofit2:converter-gson:2.0.2",
                     "okhttp-log"        : "com.squareup.okhttp3:logging-interceptor:3.0.1",
                     "rxandroid"         : "io.reactivex:rxandroid:1.2.0",
+                    "rxpermissions"     : "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar",
                     "butterknife"       : "com.jakewharton:butterknife:7.0.1"]
 }
