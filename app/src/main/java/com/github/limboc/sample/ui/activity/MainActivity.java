@@ -175,7 +175,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
         if(objectList.isEmpty()){
             multipleStatusView.showEmpty();
         }else{
-            multipleStatusView.showEmpty();
+            multipleStatusView.showContent();
         }
     }
 

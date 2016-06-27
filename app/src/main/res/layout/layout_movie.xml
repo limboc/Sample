@@ -28,4 +28,14 @@
         android:textAppearance="?android:textAppearanceLarge"
         android:textColor="?attr/colorPrimary"
         app:useStrikeThrough="false"/>
+    <com.github.limboc.sample.ui.widget.TagTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="了空间看了监控而无法"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:borderColor="@color/colorPrimary"
+        app:backgroundColor="@color/colorPrimaryTransparent"/>
 </LinearLayout>
