@@ -1,8 +1,12 @@
 package com.github.limboc.sample.presenter;
 
+import android.content.Context;
+
 import com.github.limboc.sample.api.DrakeetFactory;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.iview.IMainView;
+import com.github.limboc.sample.ui.widget.LoadingDialog;
+import com.github.limboc.sample.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +52,37 @@ public class MainPresenter extends BasePresenter<IMainView>{
         rxManager.add(s);
     }
 
-    public void getMe(Subscriber<List<Meizhi>> subscriber){
-        Observable observable = DrakeetFactory.getGankIOSingleton()
+    public void getMe(Context context){
+        loadingDialog = new LoadingDialog(context, true);
+        Subscription s = DrakeetFactory.getGankIOSingleton()
                 .getMeizhiData(limit, page)
-                .map(new HttpResultFunc<>());
-
-        toSubscribe(observable, subscriber);
+                .map(new HttpResultFunc<>())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(() -> loadingDialog.show())
+                .subscribe(meizhiData -> {
+                    loadingDialog.dismiss();
+                    if(page == 1){
+                        meizhiList.clear();
+                    }
+                    if(meizhiData == null){
+                        return;
+                    }
+                    meizhiList.addAll(meizhiData);
+                    getView().onLoadDataSuccess(meizhiList);
+                },throwable -> {
+                    loadingDialog.dismiss();
+                    int size = meizhiList.size();
+                    page = size % limit == 0 ? size/limit : size/limit+1;
+                    handleError(throwable);
+                }, ()-> loadingDialog.dismiss());
+        loadingDialog.setOnCancelListener(l -> {
+            if (!s.isUnsubscribed()) {
+                s.unsubscribe();
+            }
+        });
+        rxManager.add(s);
     }
 
     public int getPage() {

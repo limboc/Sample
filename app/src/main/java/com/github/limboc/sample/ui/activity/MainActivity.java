@@ -173,10 +173,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
 
                 return true;
             case R.id.action_progress_dialog:
-                presenter.getMe(new ProgressSubscriber(context, o -> {
-                    //L.d("main", "load completed");
-                    L.d("main", o.toString());
-                }));
+                presenter.getMe(context);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,18 +1,14 @@
 package com.github.limboc.sample.presenter;
 
+import com.github.limboc.sample.api.ApiException;
 import com.github.limboc.sample.api.DrakeetFactory;
 import com.github.limboc.sample.api.GankApi;
 import com.github.limboc.sample.data.SimpleResult;
 import com.github.limboc.sample.presenter.iview.IBaseView;
-import com.github.limboc.sample.api.ApiException;
+import com.github.limboc.sample.ui.widget.LoadingDialog;
 import com.github.limboc.sample.utils.RxManager;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 
 public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
@@ -20,6 +16,7 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
     private T mView;
     public GankApi mDataManager;
     public RxManager rxManager;
+    public LoadingDialog loadingDialog;
 
     @Override
     public void attachView(T mvpView) {
@@ -33,6 +30,10 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
         this.mView = null;
         this.mDataManager = null;
         this.rxManager.clear();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+            loadingDialog = null;
+        }
     }
 
     public boolean isViewAttached() {
@@ -60,14 +61,6 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
             super("Please call Presenter.attachView(MvpView) before" +
                     " requesting data to the Presenter");
         }
-    }
-
-    public <T> void toSubscribe(Observable<T> o, Subscriber<T> s){
-        o.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s);
-
     }
 
     public class HttpResultFunc<T> implements Func1<SimpleResult<T>, T> {
