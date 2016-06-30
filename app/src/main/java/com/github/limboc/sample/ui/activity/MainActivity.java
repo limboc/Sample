@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
+import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
@@ -28,6 +29,7 @@ import com.github.limboc.sample.utils.Event;
 import com.github.limboc.sample.utils.L;
 import com.github.limboc.sample.utils.NetworkUtils;
 import com.github.limboc.sample.utils.T;
+import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     RecyclerView recyclerView;
     @Bind(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
-    private List<Object> objectList;
+    private List<Meizhi> objectList;
     private BaseRecyclerAdapter adapter;
     private int mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
     private ArrayList<String> mSelectPath;
@@ -181,13 +183,18 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     }
 
     @Override
-    public void onLoadDataSuccess(List<Object> list) {
+    public void onLoadDataSuccess(List<Meizhi> list) {
         objectList = list;
         if (presenter.getPage() == 1) {
             swipeToLoadLayout.setRefreshing(false);
             adapter = new BaseRecyclerAdapter(this.objectList);
-            ImgItem imgItem = new ImgItem(getBaseContext());
-            imgItem.setOnItemClickListener(position -> startActivity(new Intent(context, MovieActivity.class)));
+            ImgItem imgItem = new ImgItem(context);
+            imgItem.setOnItemClickListener(position -> {
+                Intent intent = new Intent(context, MovieActivity.class);
+                Gson gson = new Gson();
+                intent.putExtra("objectList", gson.toJson(objectList));
+                startActivity(intent);
+            });
             adapter.addItemFactory(imgItem);
             if (presenter.hasNext()) {
                 adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));

@@ -19,7 +19,7 @@ import rx.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter<IMainView>{
 
     private int page=1, limit = 10;
-    private List<Object> objectList = new ArrayList<>();
+    private List<Meizhi> meizhiList = new ArrayList<>();
 
     public MainPresenter() {
 
@@ -33,15 +33,15 @@ public class MainPresenter extends BasePresenter<IMainView>{
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(meizhiData -> {
                     if(page == 1){
-                        objectList.clear();
+                        meizhiList.clear();
                     }
                     if(meizhiData == null){
                         return;
                     }
-                    objectList.addAll(meizhiData);
-                    getView().onLoadDataSuccess(objectList);
+                    meizhiList.addAll(meizhiData);
+                    getView().onLoadDataSuccess(meizhiList);
                 },throwable -> {
-                    int size = objectList.size();
+                    int size = meizhiList.size();
                     page = size % limit == 0 ? size/limit : size/limit+1;
                     handleError(throwable);
                 });
@@ -65,7 +65,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
     }
 
     public boolean hasNext(){
-        int size = objectList.size();
+        int size = meizhiList.size();
         return (size != 0 && size % limit == 0) ? true:false;
     }
 

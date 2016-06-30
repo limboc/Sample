@@ -1,5 +1,7 @@
 package com.github.limboc.sample.presenter.iview;
 
+import com.github.limboc.sample.data.bean.Meizhi;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,6 @@ import java.util.List;
  */
 public interface IMainView extends IBaseView{
 
-    void onLoadDataSuccess(List<Object> objectList);
+    void onLoadDataSuccess(List<Meizhi> objectList);
 
 }
