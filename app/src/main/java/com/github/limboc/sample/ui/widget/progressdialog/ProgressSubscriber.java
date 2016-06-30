@@ -2,8 +2,11 @@ package com.github.limboc.sample.ui.widget.progressdialog;
 
 import android.content.Context;
 
+import com.github.limboc.sample.R;
+
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import rx.Subscriber;
 
@@ -59,8 +62,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> implements ProgressCanc
     @Override
     public void onError(Throwable e) {
         e.printStackTrace();
-        if(e instanceof SocketException || e instanceof ConnectException){
-            com.github.limboc.sample.utils.T.showShort("连不到服务器");
+        if(e instanceof SocketException || e instanceof ConnectException
+                || e instanceof UnknownHostException){
+            com.github.limboc.sample.utils.T.showShort(R.string.connet_time_out);
         }else{
             com.github.limboc.sample.utils.T.showShort(e.getMessage());
         }
