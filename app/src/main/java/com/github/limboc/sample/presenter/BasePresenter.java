@@ -4,11 +4,8 @@ import com.github.limboc.sample.api.DrakeetFactory;
 import com.github.limboc.sample.api.GankApi;
 import com.github.limboc.sample.data.SimpleResult;
 import com.github.limboc.sample.presenter.iview.IBaseView;
-import com.github.limboc.sample.utils.ApiException;
+import com.github.limboc.sample.api.ApiException;
 import com.github.limboc.sample.utils.RxManager;
-
-import java.net.ConnectException;
-import java.net.SocketException;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -70,6 +67,7 @@ public class BasePresenter<T extends IBaseView> implements IPresenter<T> {
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s);
+
     }
 
     public class HttpResultFunc<T> implements Func1<SimpleResult<T>, T> {

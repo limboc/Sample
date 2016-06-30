@@ -1,4 +1,4 @@
-package com.github.limboc.sample.utils;
+package com.github.limboc.sample.api;
 
 
 public class ApiException extends RuntimeException {
