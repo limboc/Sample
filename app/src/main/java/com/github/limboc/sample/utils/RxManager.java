@@ -27,6 +27,13 @@ public class RxManager {
         mCompositeSubscription.add(m);
     }
 
+    public void remove(Subscription m){
+        if(!m.isUnsubscribed()){
+            m.unsubscribe();
+            mCompositeSubscription.remove(m);
+        }
+    }
+
     public void clear() {
         mCompositeSubscription.unsubscribe();// 取消订阅
         for (Map.Entry<String, Observable<?>> entry : mObservables.entrySet()) {

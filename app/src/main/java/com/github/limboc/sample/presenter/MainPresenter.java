@@ -77,11 +77,7 @@ public class MainPresenter extends BasePresenter<IMainView>{
                     page = size % limit == 0 ? size/limit : size/limit+1;
                     handleError(throwable);
                 }, ()-> loadingDialog.dismiss());
-        loadingDialog.setOnCancelListener(l -> {
-            if (!s.isUnsubscribed()) {
-                s.unsubscribe();
-            }
-        });
+        loadingDialog.setOnCancelListener(l -> rxManager.remove(s));
         rxManager.add(s);
     }
 
