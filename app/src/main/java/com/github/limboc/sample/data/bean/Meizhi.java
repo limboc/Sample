@@ -3,8 +3,9 @@ package com.github.limboc.sample.data.bean;
 
 
 import java.util.Date;
+import me.drakeet.multitype.Item;
 
-public class Meizhi{
+public class Meizhi implements Item{
 
     private String url;
     private String type;

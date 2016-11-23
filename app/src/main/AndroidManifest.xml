@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.DayNight.NoActionBar">
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.activity.MultiTypeActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

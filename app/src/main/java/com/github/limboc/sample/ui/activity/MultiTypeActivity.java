@@ -10,17 +10,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import butterknife.Bind;
+import com.github.limboc.refresh.OnLoadMoreListener;
 import com.github.limboc.refresh.OnRefreshListener;
 import com.github.limboc.refresh.SwipeToLoadLayout;
 import com.github.limboc.sample.R;
 import com.github.limboc.sample.data.bean.Meizhi;
 import com.github.limboc.sample.presenter.MainPresenter;
 import com.github.limboc.sample.presenter.iview.IMainView;
+import com.github.limboc.sample.ui.adapter.BaseAdapter;
 import com.github.limboc.sample.ui.adapter.BaseRecyclerAdapter;
 import com.github.limboc.sample.ui.item.ImgItem;
+import com.github.limboc.sample.ui.item.LoadMoreItem;
 import com.github.limboc.sample.ui.item.LoadMoreRecyclerItemFactory;
 import com.github.limboc.sample.ui.item.OnRecyclerLoadMoreListener;
+import com.github.limboc.sample.ui.provider.MeizhiProvider;
 import com.github.limboc.sample.ui.utils.MultiImageSelector;
 import com.github.limboc.sample.ui.widget.BottomSheetDialogView;
 import com.github.limboc.sample.ui.widget.MultipleStatusView;
@@ -30,13 +34,14 @@ import com.github.limboc.sample.utils.NetworkUtils;
 import com.github.limboc.sample.utils.T;
 import com.google.gson.Gson;
 import com.tbruyelle.rxpermissions.RxPermissions;
-
 import java.util.ArrayList;
+import java.util.IllegalFormatConversionException;
 import java.util.List;
+import me.drakeet.multitype.Item;
+import me.drakeet.multitype.Items;
 
-import butterknife.Bind;
-
-public class MainActivity extends BasePresenterActivity<MainPresenter> implements OnRefreshListener, OnRecyclerLoadMoreListener, IMainView {
+public class MultiTypeActivity extends BasePresenterActivity<MainPresenter> implements OnRefreshListener,
+    OnLoadMoreListener, IMainView {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -46,10 +51,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     RecyclerView recyclerView;
     @Bind(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
-    private List<Meizhi> objectList;
-    private BaseRecyclerAdapter adapter;
+    private Items items;
+    private BaseAdapter adapter;
     private int mDayNightMode = AppCompatDelegate.MODE_NIGHT_NO;
     private ArrayList<String> mSelectPath;
+    private LoadMoreItem loadMoreItem;
 
     @Override
     protected int getLayoutId() {
@@ -107,24 +113,13 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
             multipleStatusView.showNoNetwork();
             return;
         }
-        if (adapter != null) {
-            adapter.loadMoreFinished();
+        if (loadMoreItem != null && adapter != null) {
+            loadMoreItem.setStatus(LoadMoreItem.PRELOADING);
         }
-        objectList = new ArrayList<>();
+        items = new Items();
         presenter.setPage(1);
         presenter.loadData();
 
-    }
-
-    @Override
-    public void onLoadMore(BaseRecyclerAdapter adapter) {
-        if (swipeToLoadLayout.isRefreshing() && adapter != null) {
-            swipeToLoadLayout.setRefreshing(false);
-            adapter.loadMoreFinished();
-            return;
-        }
-        presenter.setPage(presenter.getPage() + 1);
-        presenter.loadData();
     }
 
 
@@ -180,30 +175,27 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
 
     @Override
     public void onLoadDataSuccess(List<Meizhi> list) {
-        objectList = list;
+        items.clear();
+        items.addAll(list);
         if (presenter.getPage() == 1) {
             swipeToLoadLayout.setRefreshing(false);
-            adapter = new BaseRecyclerAdapter(this.objectList);
-            ImgItem imgItem = new ImgItem(context);
-            imgItem.setOnItemClickListener(position -> {
-                Intent intent = new Intent(context, MovieActivity.class);
-                Gson gson = new Gson();
-                intent.putExtra("objectList", gson.toJson(objectList));
-                startActivity(intent);
-            });
-            adapter.addItemFactory(imgItem);
+            adapter = new BaseAdapter(items, this);
+            adapter.register(Meizhi.class, new MeizhiProvider());
             if (presenter.hasNext()) {
-                adapter.enableLoadMore(new LoadMoreRecyclerItemFactory(this));
+                loadMoreItem = new LoadMoreItem(LoadMoreItem.PRELOADING);
+                items.add(loadMoreItem);
             }
             recyclerView.setAdapter(adapter);
         } else {
             if (!presenter.hasNext()) {
-                adapter.loadMoreEnd();
+                loadMoreItem.setStatus(LoadMoreItem.END);
             }
-            adapter.loadMoreFinished();
+            loadMoreItem.setStatus(LoadMoreItem.PRELOADING);
+            items.add(loadMoreItem);
             adapter.notifyDataSetChanged();
+
         }
-        if(objectList.isEmpty()){
+        if(items.isEmpty()){
             multipleStatusView.showEmpty();
         }else{
             multipleStatusView.showContent();
@@ -214,12 +206,13 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     @Override
     public void handleThrowable(Throwable throwable) {
         super.handleThrowable(throwable);
-        if(objectList.isEmpty()){
+        if(items.isEmpty()){
             multipleStatusView.showError();
         }
         swipeToLoadLayout.setRefreshing(false);
-        if (adapter != null) {
-            adapter.loadMoreFailed();
+        if (loadMoreItem != null && adapter != null) {
+            loadMoreItem.setStatus(LoadMoreItem.ERROR);
+            adapter.notifyDataSetChanged();
         }
 
     }
@@ -235,4 +228,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter> implement
     }
 
 
+    @Override public void onLoadMore() {
+        if (swipeToLoadLayout.isRefreshing() && adapter != null) {
+            swipeToLoadLayout.setRefreshing(false);
+            loadMoreItem.setStatus(LoadMoreItem.PRELOADING);
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        presenter.setPage(presenter.getPage() + 1);
+        presenter.loadData();
+    }
 }

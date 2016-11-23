@@ -39,4 +39,5 @@ dependencies {
     compile rootProject.ext.dependencies["rxandroid"]
     compile rootProject.ext.dependencies["rxpermissions"]
     compile rootProject.ext.dependencies["butterknife"]
+    compile 'me.drakeet.multitype:multitype:2.2.1'
 }
